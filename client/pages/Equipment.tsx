@@ -60,12 +60,14 @@ const equipment = [
 
 const getStatusBadge = (status: string) => {
   switch (status) {
-    case "Активен":
-      return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Активен</Badge>;
-    case "На обслуживании":
-      return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">На обслуживании</Badge>;
-    case "Неисправен":
-      return <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Неисправен</Badge>;
+    case "в работе":
+      return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">в работе</Badge>;
+    case "выключено / не в работе":
+      return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">выключено / не в работе</Badge>;
+    case "выведено из эксплуатации":
+      return <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-100">выведено из эксплуатации</Badge>;
+    case "удалено":
+      return <Badge className="bg-red-100 text-red-800 hover:bg-red-100">удалено</Badge>;
     default:
       return <Badge variant="secondary">{status}</Badge>;
   }
@@ -135,7 +137,7 @@ export default function Equipment() {
       {/* Filters and Search */}
       <Card>
         <CardHeader>
-          <CardTitle>Списо�� оборудования</CardTitle>
+          <CardTitle>Список оборудования</CardTitle>
           <CardDescription>
             Полный список серверного и сетевого оборудования
           </CardDescription>
