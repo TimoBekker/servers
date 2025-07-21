@@ -1,6 +1,7 @@
-import { Plus, Search, Filter, MoreHorizontal } from "lucide-react";
+import { Plus, Search, Filter, MoreHorizontal, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -60,7 +61,7 @@ const equipment = [
 
 const getStatusBadge = (status: string) => {
   switch (status) {
-    case "�� работе":
+    case "в работе":
       return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">в работе</Badge>;
     case "выключено / не в работе":
       return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">выключено / не в работе</Badge>;
