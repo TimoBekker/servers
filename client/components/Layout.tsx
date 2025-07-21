@@ -86,6 +86,11 @@ const navigation = [
         href: "/reports/resources",
         icon: Activity,
       },
+      {
+        name: "Используемые лицензии",
+        href: "/reports/licenses",
+        icon: Shield,
+      },
     ],
   },
 ];
