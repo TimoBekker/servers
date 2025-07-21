@@ -64,7 +64,7 @@ const getStatusBadge = (status: string) => {
     case "в работе":
       return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">в работе</Badge>;
     case "выключено / не в работе":
-      return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">выключено / не в работе</Badge>;
+      return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">выклю��ено / не в работе</Badge>;
     case "выведено из эксплуатации":
       return <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-100">выведено из эксплуатации</Badge>;
     case "удалено":
@@ -96,7 +96,7 @@ export default function Equipment() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Всего оборудования
+              Всего обор��дования
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -175,16 +175,30 @@ export default function Equipment() {
               {equipment.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell className="font-medium">{item.id}</TableCell>
-                  <TableCell>{item.name}</TableCell>
+                  <TableCell>
+                    <Link
+                      to={`/equipment/${item.id}`}
+                      className="text-primary hover:underline font-medium"
+                    >
+                      {item.name}
+                    </Link>
+                  </TableCell>
                   <TableCell>{item.type}</TableCell>
                   <TableCell>{getStatusBadge(item.status)}</TableCell>
                   <TableCell>{item.location}</TableCell>
                   <TableCell className="max-w-xs truncate">{item.specs}</TableCell>
                   <TableCell>{item.responsible}</TableCell>
                   <TableCell>
-                    <Button variant="ghost" size="sm">
-                      <MoreHorizontal className="w-4 h-4" />
-                    </Button>
+                    <div className="flex items-center space-x-1">
+                      <Button variant="ghost" size="sm" asChild>
+                        <Link to={`/equipment/${item.id}`}>
+                          <ExternalLink className="w-4 h-4" />
+                        </Link>
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <MoreHorizontal className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
