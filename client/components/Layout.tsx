@@ -139,7 +139,7 @@ export default function Layout({ children }: LayoutProps) {
               <Server className="w-5 h-5 text-sidebar-primary-foreground" />
             </div>
             <span className="text-lg font-semibold text-sidebar-foreground">
-              Учет ИТ
+              Servers 2.0
             </span>
           </div>
         </div>
