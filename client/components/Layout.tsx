@@ -41,7 +41,7 @@ const navigation = [
     icon: Home,
   },
   {
-    name: "Оборудование",
+    name: "О��орудование",
     href: "/equipment",
     icon: Server,
   },
@@ -223,6 +223,47 @@ export default function Layout({ children }: LayoutProps) {
             ))}
           </ul>
         </nav>
+
+        {/* User Menu */}
+        <div className="px-4 py-4 border-t border-sidebar-border">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="w-full flex items-center space-x-3 px-3 py-2 text-sm font-medium rounded-md transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sidebar-foreground">
+                <div className="flex items-center justify-center w-8 h-8 bg-sidebar-primary rounded-full">
+                  <User className="w-4 h-4 text-sidebar-primary-foreground" />
+                </div>
+                <div className="flex-1 text-left">
+                  <p className="font-medium">Никифоров Д.С.</p>
+                  <p className="text-xs text-sidebar-foreground/70">Администратор</p>
+                </div>
+                <ChevronDown className="w-4 h-4" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              side="right"
+              className="w-56 bg-background border border-border"
+            >
+              <DropdownMenuItem className="cursor-pointer">
+                <User className="w-4 h-4 mr-2" />
+                Мой профиль
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer">
+                <UserCog className="w-4 h-4 mr-2" />
+                Управление пользователями и группами
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer">
+                <FileSearch className="w-4 h-4 mr-2" />
+                Просмотр логов системы
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive">
+                <LogOut className="w-4 h-4 mr-2" />
+                Выход из ЛК
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
 
       {/* Main content */}
