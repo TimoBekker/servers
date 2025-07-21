@@ -60,7 +60,7 @@ const equipment = [
 
 const getStatusBadge = (status: string) => {
   switch (status) {
-    case "в работе":
+    case "�� работе":
       return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">в работе</Badge>;
     case "выключено / не в работе":
       return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">выключено / не в работе</Badge>;
@@ -107,7 +107,7 @@ export default function Equipment() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Активных</CardTitle>
+            <CardTitle className="text-sm font-medium">В работе</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">22</div>
@@ -116,7 +116,7 @@ export default function Equipment() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">На обслуживании</CardTitle>
+            <CardTitle className="text-sm font-medium">Выключено</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">1</div>
@@ -125,7 +125,7 @@ export default function Equipment() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Неисправных</CardTitle>
+            <CardTitle className="text-sm font-medium">Выведено из эксплуатации</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">1</div>
