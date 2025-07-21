@@ -14,7 +14,11 @@ import {
   Settings,
   Users,
   Activity,
-  Shield
+  Shield,
+  User,
+  UserCog,
+  FileSearch,
+  LogOut
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
