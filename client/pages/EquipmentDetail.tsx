@@ -22,7 +22,7 @@ const equipmentData: { [key: string]: any } = {
     status: "выключено / не в работе",
     type: "Виртуальный сервер",
     parentEquipment: "vc7cloud.guso.loc",
-    description: "Узел 1 тестового СМЭВ 3.0 отключино 21.09.2023",
+    description: "Узел 1 тестового СМЭВ 3.0 отключено 21.09.2023",
     ipAddresses: [
       {
         ip: "10.0.87.218",

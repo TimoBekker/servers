@@ -41,7 +41,7 @@ const navigation = [
     icon: Home,
   },
   {
-    name: "О��орудование",
+    name: "Оборудование",
     href: "/equipment",
     icon: Server,
   },

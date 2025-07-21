@@ -83,7 +83,7 @@ const recentEvents = [
   {
     id: 4,
     type: "contract",
-    title: "Исте��ает контракт",
+    title: "Истекает контракт",
     description: "Контракт на поддержку ПО истекает через 30 дней",
     time: "2 дня назад",
     status: "error",

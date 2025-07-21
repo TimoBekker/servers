@@ -76,7 +76,7 @@ const getStatusBadge = (status: string) => {
     case "выключено / не в работе":
       return (
         <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">
-          выклю��ено / не в работе
+          выключено / не в работе
         </Badge>
       );
     case "выведено из эксплуатации":
@@ -118,7 +118,7 @@ export default function Equipment() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Всего обор��дования
+              Всего оборудования
             </CardTitle>
           </CardHeader>
           <CardContent>

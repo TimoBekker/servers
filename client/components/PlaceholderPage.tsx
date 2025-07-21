@@ -17,7 +17,7 @@ export default function PlaceholderPage({
       <h1 className="text-2xl font-semibold mb-2">{title}</h1>
       <p className="text-muted-foreground max-w-md">
         {description ||
-          "Эта страница находится в разработке. Продолжите работу с промптами, что��ы добавить содержимое этой страницы."}
+          "Эта страница находится в разработке"}
       </p>
     </div>
   );
