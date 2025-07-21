@@ -13,7 +13,8 @@ import {
   Download,
   Settings,
   Users,
-  Activity
+  Activity,
+  Shield
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
