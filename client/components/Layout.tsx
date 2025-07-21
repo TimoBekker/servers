@@ -91,7 +91,21 @@ const navigation = [
 
 export default function Layout({ children }: LayoutProps) {
   const location = useLocation();
-  const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const [expandedItems, setExpandedItems] = useState<string[]>(() => {
+    // Auto-expand parent menus if we're on a child page
+    const initialExpanded: string[] = [];
+    navigation.forEach(item => {
+      if (item.children) {
+        const hasActiveChild = item.children.some(child =>
+          location.pathname.startsWith(child.href)
+        );
+        if (hasActiveChild) {
+          initialExpanded.push(item.name);
+        }
+      }
+    });
+    return initialExpanded;
+  });
 
   const toggleExpanded = (name: string) => {
     setExpandedItems(prev =>
