@@ -5,7 +5,10 @@ interface PlaceholderPageProps {
   description?: string;
 }
 
-export default function PlaceholderPage({ title, description }: PlaceholderPageProps) {
+export default function PlaceholderPage({
+  title,
+  description,
+}: PlaceholderPageProps) {
   return (
     <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
       <div className="flex items-center justify-center w-16 h-16 bg-muted rounded-full mb-4">
@@ -13,7 +16,8 @@ export default function PlaceholderPage({ title, description }: PlaceholderPageP
       </div>
       <h1 className="text-2xl font-semibold mb-2">{title}</h1>
       <p className="text-muted-foreground max-w-md">
-        {description || "Эта страница находится в разработке. Продолжите работу с промптами, что��ы добавить содержимое этой страницы."}
+        {description ||
+          "Эта страница находится в разработке. Продолжите работу с промптами, что��ы добавить содержимое этой страницы."}
       </p>
     </div>
   );

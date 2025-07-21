@@ -28,14 +28,14 @@ const equipmentData: { [key: string]: any } = {
         ip: "10.0.87.218",
         mask: "/23 (255.255.254.0)",
         vlan: "979 (Серверы РЦУП (Самара))",
-        dns: "SMEV3-APP03T.tech.samregion.ru"
+        dns: "SMEV3-APP03T.tech.samregion.ru",
       },
       {
         ip: "10.100.10.250",
         mask: "/27 (255.255.255.224)",
         vlan: "2241vlan_SMEV3_10.100-TEST (/27)",
-        dns: ""
-      }
+        dns: "",
+      },
     ],
     responsible: [
       {
@@ -44,7 +44,7 @@ const equipmentData: { [key: string]: any } = {
         company: "IT-Universe",
         role: "Ответственный за консультирование и ведение проекта",
         email: "kravchenko.m@it-universe.ru",
-        phone: "+7 846 979 8080, +7 960 813 4440"
+        phone: "+7 846 979 8080, +7 960 813 4440",
       },
       {
         organization: "Цифровой регион",
@@ -52,7 +52,7 @@ const equipmentData: { [key: string]: any } = {
         company: "Цифровой регион",
         role: "Ответственный за администрирование ОС и ПО",
         email: "n.belov@rcu.samregion.ru",
-        phone: "903"
+        phone: "903",
       },
       {
         organization: "Цифровой регион",
@@ -60,8 +60,8 @@ const equipmentData: { [key: string]: any } = {
         company: "Цифровой регион",
         role: "Ответственный за администрирование ОС и ПО",
         email: "a.maltsev@digitalreg.ru",
-        phone: "901"
-      }
+        phone: "901",
+      },
     ],
     characteristics: {
       vmwareLevel: "4 x 1",
@@ -69,8 +69,8 @@ const equipmentData: { [key: string]: any } = {
       ram: "16Gb (16384 Mb)",
       storage: [
         { name: "HDD1", size: "50 Gb" },
-        { name: "HDD2", size: "10 Gb" }
-      ]
+        { name: "HDD2", size: "10 Gb" },
+      ],
     },
     software: ["Apache Tomcat 8"],
     informationSystems: ['Тестовый контур ГИС СО "СМЭВ"'],
@@ -79,7 +79,7 @@ const equipmentData: { [key: string]: any } = {
       backup: "нет",
       lastBackupDate: "не задано",
       commissionedDate: "09.02.2016",
-      decommissionedDate: "не задано"
+      decommissionedDate: "не задано",
     },
     relatedTickets: "не задано",
     securityParams: {
@@ -88,33 +88,49 @@ const equipmentData: { [key: string]: any } = {
       arcsightConnection: "нет",
       remoteAccess: "не задано",
       internetForwarding: "не задано",
-      listeningPorts: "не задано"
+      listeningPorts: "не задано",
     },
     passwords: [
       {
         username: "devel",
         password: "***hidden***",
-        description: "Описание не задано"
+        description: "Описание не задано",
       },
       {
         username: "root",
         password: "***hidden***",
-        description: "m.iseckiy"
-      }
-    ]
-  }
+        description: "m.iseckiy",
+      },
+    ],
+  },
 };
 
 const getStatusBadge = (status: string) => {
   switch (status) {
     case "в работе":
-      return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">в работе</Badge>;
+      return (
+        <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+          в работе
+        </Badge>
+      );
     case "выключено / не в работе":
-      return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">выключено / не в работе</Badge>;
+      return (
+        <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">
+          выключено / не в работе
+        </Badge>
+      );
     case "выведено из эксплуатации":
-      return <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-100">выведено из эксплуатации</Badge>;
+      return (
+        <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-100">
+          выведено из эксплуатации
+        </Badge>
+      );
     case "удалено":
-      return <Badge className="bg-red-100 text-red-800 hover:bg-red-100">удалено</Badge>;
+      return (
+        <Badge className="bg-red-100 text-red-800 hover:bg-red-100">
+          удалено
+        </Badge>
+      );
     default:
       return <Badge variant="secondary">{status}</Badge>;
   }
@@ -122,8 +138,10 @@ const getStatusBadge = (status: string) => {
 
 export default function EquipmentDetail() {
   const { id } = useParams<{ id: string }>();
-  const [visiblePasswords, setVisiblePasswords] = useState<{ [key: string]: boolean }>({});
-  
+  const [visiblePasswords, setVisiblePasswords] = useState<{
+    [key: string]: boolean;
+  }>({});
+
   if (!id || !equipmentData[id]) {
     return (
       <div className="space-y-6">
@@ -137,7 +155,9 @@ export default function EquipmentDetail() {
         </div>
         <div className="text-center py-12">
           <h2 className="text-2xl font-bold mb-2">Оборудование не найдено</h2>
-          <p className="text-muted-foreground">Запрошенное оборудование не существует</p>
+          <p className="text-muted-foreground">
+            Запрошенное оборудование не существует
+          </p>
         </div>
       </div>
     );
@@ -146,9 +166,9 @@ export default function EquipmentDetail() {
   const equipment = equipmentData[id];
 
   const togglePasswordVisibility = (index: number) => {
-    setVisiblePasswords(prev => ({
+    setVisiblePasswords((prev) => ({
       ...prev,
-      [index]: !prev[index]
+      [index]: !prev[index],
     }));
   };
 
@@ -192,28 +212,40 @@ export default function EquipmentDetail() {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium text-muted-foreground">VMware-имя</label>
+                <label className="text-sm font-medium text-muted-foreground">
+                  VMware-имя
+                </label>
                 <p className="font-medium">{equipment.vmwareName}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Hostname</label>
+                <label className="text-sm font-medium text-muted-foreground">
+                  Hostname
+                </label>
                 <p className="font-medium">{equipment.hostname}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Тип</label>
+                <label className="text-sm font-medium text-muted-foreground">
+                  Тип
+                </label>
                 <p className="font-medium">{equipment.type}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Статус</label>
+                <label className="text-sm font-medium text-muted-foreground">
+                  Статус
+                </label>
                 <div className="mt-1">{getStatusBadge(equipment.status)}</div>
               </div>
             </div>
             <div>
-              <label className="text-sm font-medium text-muted-foreground">Родительское оборудование</label>
+              <label className="text-sm font-medium text-muted-foreground">
+                Родительское оборудование
+              </label>
               <p className="font-medium">{equipment.parentEquipment}</p>
             </div>
             <div>
-              <label className="text-sm font-medium text-muted-foreground">Описание</label>
+              <label className="text-sm font-medium text-muted-foreground">
+                Описание
+              </label>
               <p className="font-medium">{equipment.description}</p>
             </div>
           </CardContent>
@@ -227,26 +259,40 @@ export default function EquipmentDetail() {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Уровень VMware</label>
-                <p className="font-medium">{equipment.characteristics.vmwareLevel}</p>
+                <label className="text-sm font-medium text-muted-foreground">
+                  Уровень VMware
+                </label>
+                <p className="font-medium">
+                  {equipment.characteristics.vmwareLevel}
+                </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Виртуальных процессоров</label>
-                <p className="font-medium">{equipment.characteristics.totalVirtualCpu}</p>
+                <label className="text-sm font-medium text-muted-foreground">
+                  Виртуальных процессоров
+                </label>
+                <p className="font-medium">
+                  {equipment.characteristics.totalVirtualCpu}
+                </p>
               </div>
             </div>
             <div>
-              <label className="text-sm font-medium text-muted-foreground">ОЗУ</label>
+              <label className="text-sm font-medium text-muted-foreground">
+                ОЗУ
+              </label>
               <p className="font-medium">{equipment.characteristics.ram}</p>
             </div>
             <div>
-              <label className="text-sm font-medium text-muted-foreground">Хранилище</label>
+              <label className="text-sm font-medium text-muted-foreground">
+                Хранилище
+              </label>
               <div className="space-y-1">
-                {equipment.characteristics.storage.map((storage: any, index: number) => (
-                  <p key={index} className="font-medium">
-                    {storage.name}: {storage.size}
-                  </p>
-                ))}
+                {equipment.characteristics.storage.map(
+                  (storage: any, index: number) => (
+                    <p key={index} className="font-medium">
+                      {storage.name}: {storage.size}
+                    </p>
+                  ),
+                )}
               </div>
             </div>
           </CardContent>
@@ -262,21 +308,29 @@ export default function EquipmentDetail() {
               <div key={index} className="p-4 border rounded-lg space-y-2">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">IP</label>
+                    <label className="text-sm font-medium text-muted-foreground">
+                      IP
+                    </label>
                     <p className="font-medium">{addr.ip}</p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">Маска</label>
+                    <label className="text-sm font-medium text-muted-foreground">
+                      Маска
+                    </label>
                     <p className="font-medium">{addr.mask}</p>
                   </div>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">VLAN</label>
+                  <label className="text-sm font-medium text-muted-foreground">
+                    VLAN
+                  </label>
                   <p className="font-medium">{addr.vlan}</p>
                 </div>
                 {addr.dns && (
                   <div>
-                    <label className="text-sm font-medium text-muted-foreground">DNS</label>
+                    <label className="text-sm font-medium text-muted-foreground">
+                      DNS
+                    </label>
                     <p className="font-medium">{addr.dns}</p>
                   </div>
                 )}
@@ -292,20 +346,30 @@ export default function EquipmentDetail() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="text-sm font-medium text-muted-foreground">Программное обеспечение</label>
+              <label className="text-sm font-medium text-muted-foreground">
+                Программное обеспечение
+              </label>
               <div className="mt-2 space-y-1">
                 {equipment.software.map((sw: string, index: number) => (
-                  <p key={index} className="font-medium">{sw}</p>
+                  <p key={index} className="font-medium">
+                    {sw}
+                  </p>
                 ))}
               </div>
             </div>
             <Separator />
             <div>
-              <label className="text-sm font-medium text-muted-foreground">Информационные системы</label>
+              <label className="text-sm font-medium text-muted-foreground">
+                Информационные системы
+              </label>
               <div className="mt-2 space-y-1">
-                {equipment.informationSystems.map((sys: string, index: number) => (
-                  <p key={index} className="font-medium">{sys}</p>
-                ))}
+                {equipment.informationSystems.map(
+                  (sys: string, index: number) => (
+                    <p key={index} className="font-medium">
+                      {sys}
+                    </p>
+                  ),
+                )}
               </div>
             </div>
           </CardContent>
@@ -322,18 +386,26 @@ export default function EquipmentDetail() {
                 <div key={index} className="p-4 border rounded-lg space-y-2">
                   <div>
                     <p className="font-semibold">{person.name}</p>
-                    <p className="text-sm text-muted-foreground">({person.company})</p>
+                    <p className="text-sm text-muted-foreground">
+                      ({person.company})
+                    </p>
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-muted-foreground">Роль</label>
+                    <label className="text-xs font-medium text-muted-foreground">
+                      Роль
+                    </label>
                     <p className="text-sm">{person.role}</p>
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-muted-foreground">Email</label>
+                    <label className="text-xs font-medium text-muted-foreground">
+                      Email
+                    </label>
                     <p className="text-sm font-mono">{person.email}</p>
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-muted-foreground">Телефон</label>
+                    <label className="text-xs font-medium text-muted-foreground">
+                      Телефон
+                    </label>
                     <p className="text-sm">{person.phone}</p>
                   </div>
                 </div>
@@ -350,20 +422,36 @@ export default function EquipmentDetail() {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Резервное копирование</label>
-                <p className="font-medium">{equipment.equipmentStatus.backup}</p>
+                <label className="text-sm font-medium text-muted-foreground">
+                  Резервное копирование
+                </label>
+                <p className="font-medium">
+                  {equipment.equipmentStatus.backup}
+                </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Последний бекап</label>
-                <p className="font-medium">{equipment.equipmentStatus.lastBackupDate}</p>
+                <label className="text-sm font-medium text-muted-foreground">
+                  Последний бекап
+                </label>
+                <p className="font-medium">
+                  {equipment.equipmentStatus.lastBackupDate}
+                </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Введено в эксплуатацию</label>
-                <p className="font-medium">{equipment.equipmentStatus.commissionedDate}</p>
+                <label className="text-sm font-medium text-muted-foreground">
+                  Введено в эксплуатацию
+                </label>
+                <p className="font-medium">
+                  {equipment.equipmentStatus.commissionedDate}
+                </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Выведено из эксплуатации</label>
-                <p className="font-medium">{equipment.equipmentStatus.decommissionedDate}</p>
+                <label className="text-sm font-medium text-muted-foreground">
+                  Выведено из эксплуатации
+                </label>
+                <p className="font-medium">
+                  {equipment.equipmentStatus.decommissionedDate}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -377,28 +465,52 @@ export default function EquipmentDetail() {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Доступ в КСПД</label>
-                <p className="font-medium">{equipment.securityParams.kspdAccess}</p>
+                <label className="text-sm font-medium text-muted-foreground">
+                  Доступ в КСПД
+                </label>
+                <p className="font-medium">
+                  {equipment.securityParams.kspdAccess}
+                </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Доступ в Интернет</label>
-                <p className="font-medium">{equipment.securityParams.internetAccess}</p>
+                <label className="text-sm font-medium text-muted-foreground">
+                  Доступ в Интернет
+                </label>
+                <p className="font-medium">
+                  {equipment.securityParams.internetAccess}
+                </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Соединение с Arcsight</label>
-                <p className="font-medium">{equipment.securityParams.arcsightConnection}</p>
+                <label className="text-sm font-medium text-muted-foreground">
+                  Соединение с Arcsight
+                </label>
+                <p className="font-medium">
+                  {equipment.securityParams.arcsightConnection}
+                </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Удаленный доступ</label>
-                <p className="font-medium">{equipment.securityParams.remoteAccess}</p>
+                <label className="text-sm font-medium text-muted-foreground">
+                  Удаленный доступ
+                </label>
+                <p className="font-medium">
+                  {equipment.securityParams.remoteAccess}
+                </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Проброс в интернет</label>
-                <p className="font-medium">{equipment.securityParams.internetForwarding}</p>
+                <label className="text-sm font-medium text-muted-foreground">
+                  Проброс в интернет
+                </label>
+                <p className="font-medium">
+                  {equipment.securityParams.internetForwarding}
+                </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Прослушиваемые порты</label>
-                <p className="font-medium">{equipment.securityParams.listeningPorts}</p>
+                <label className="text-sm font-medium text-muted-foreground">
+                  Прослушиваемые порты
+                </label>
+                <p className="font-medium">
+                  {equipment.securityParams.listeningPorts}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -412,10 +524,15 @@ export default function EquipmentDetail() {
           <CardContent>
             <div className="space-y-4">
               {equipment.passwords.map((pwd: any, index: number) => (
-                <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-4 border rounded-lg"
+                >
                   <div className="space-y-1">
                     <p className="font-medium">{pwd.username}</p>
-                    <p className="text-sm text-muted-foreground">{pwd.description}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {pwd.description}
+                    </p>
                   </div>
                   <div className="flex items-center space-x-2">
                     <code className="px-2 py-1 bg-muted rounded text-sm">
@@ -426,7 +543,11 @@ export default function EquipmentDetail() {
                       size="sm"
                       onClick={() => togglePasswordVisibility(index)}
                     >
-                      {visiblePasswords[index] ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      {visiblePasswords[index] ? (
+                        <EyeOff className="w-4 h-4" />
+                      ) : (
+                        <Eye className="w-4 h-4" />
+                      )}
                     </Button>
                     <Button
                       variant="outline"

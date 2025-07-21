@@ -2,7 +2,7 @@ import PlaceholderPage from "@/components/PlaceholderPage";
 
 export default function Software() {
   return (
-    <PlaceholderPage 
+    <PlaceholderPage
       title="Программное обеспечение"
       description="Здесь будет отображаться управление программным обеспечением."
     />

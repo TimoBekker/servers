@@ -18,7 +18,7 @@ import {
   User,
   UserCog,
   FileSearch,
-  LogOut
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -111,10 +111,10 @@ export default function Layout({ children }: LayoutProps) {
   const [expandedItems, setExpandedItems] = useState<string[]>(() => {
     // Auto-expand parent menus if we're on a child page
     const initialExpanded: string[] = [];
-    navigation.forEach(item => {
+    navigation.forEach((item) => {
       if (item.children) {
-        const hasActiveChild = item.children.some(child =>
-          location.pathname.startsWith(child.href)
+        const hasActiveChild = item.children.some((child) =>
+          location.pathname.startsWith(child.href),
         );
         if (hasActiveChild) {
           initialExpanded.push(item.name);
@@ -125,10 +125,10 @@ export default function Layout({ children }: LayoutProps) {
   });
 
   const toggleExpanded = (name: string) => {
-    setExpandedItems(prev =>
+    setExpandedItems((prev) =>
       prev.includes(name)
-        ? prev.filter(item => item !== name)
-        : [...prev, name]
+        ? prev.filter((item) => item !== name)
+        : [...prev, name],
     );
   };
 
@@ -169,7 +169,7 @@ export default function Layout({ children }: LayoutProps) {
                           "w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-md transition-colors",
                           isCurrentPath(item.href)
                             ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                            : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                            : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
                         )}
                       >
                         <div className="flex items-center space-x-3">
@@ -179,7 +179,9 @@ export default function Layout({ children }: LayoutProps) {
                         <ChevronDown
                           className={cn(
                             "w-4 h-4 transition-transform",
-                            expandedItems.includes(item.name) ? "rotate-180" : ""
+                            expandedItems.includes(item.name)
+                              ? "rotate-180"
+                              : "",
                           )}
                         />
                       </button>
@@ -193,7 +195,7 @@ export default function Layout({ children }: LayoutProps) {
                                   "flex items-center space-x-3 px-3 py-2 text-sm font-medium rounded-md transition-colors",
                                   isCurrentPath(child.href)
                                     ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                                    : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                                    : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
                                 )}
                               >
                                 <child.icon className="w-4 h-4" />
@@ -211,7 +213,7 @@ export default function Layout({ children }: LayoutProps) {
                         "flex items-center space-x-3 px-3 py-2 text-sm font-medium rounded-md transition-colors",
                         isCurrentPath(item.href)
                           ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                          : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                          : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
                       )}
                     >
                       <item.icon className="w-5 h-5" />
@@ -234,7 +236,9 @@ export default function Layout({ children }: LayoutProps) {
                 </div>
                 <div className="flex-1 text-left">
                   <p className="font-medium">Никифоров Д.С.</p>
-                  <p className="text-xs text-sidebar-foreground/70">Администратор</p>
+                  <p className="text-xs text-sidebar-foreground/70">
+                    Администратор
+                  </p>
                 </div>
                 <ChevronDown className="w-4 h-4" />
               </button>
@@ -283,9 +287,7 @@ export default function Layout({ children }: LayoutProps) {
         </header>
 
         {/* Page content */}
-        <main className="flex-1 overflow-auto p-6">
-          {children}
-        </main>
+        <main className="flex-1 overflow-auto p-6">{children}</main>
       </div>
     </div>
   );

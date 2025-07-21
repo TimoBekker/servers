@@ -1,4 +1,10 @@
-import { Plus, Search, Filter, MoreHorizontal, ExternalLink } from "lucide-react";
+import {
+  Plus,
+  Search,
+  Filter,
+  MoreHorizontal,
+  ExternalLink,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
@@ -62,13 +68,29 @@ const equipment = [
 const getStatusBadge = (status: string) => {
   switch (status) {
     case "в работе":
-      return <Badge className="bg-green-100 text-green-800 hover:bg-green-100">в работе</Badge>;
+      return (
+        <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+          в работе
+        </Badge>
+      );
     case "выключено / не в работе":
-      return <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">выклю��ено / не в работе</Badge>;
+      return (
+        <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">
+          выклю��ено / не в работе
+        </Badge>
+      );
     case "выведено из эксплуатации":
-      return <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-100">выведено из эксплуатации</Badge>;
+      return (
+        <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-100">
+          выведено из эксплуатации
+        </Badge>
+      );
     case "удалено":
-      return <Badge className="bg-red-100 text-red-800 hover:bg-red-100">удалено</Badge>;
+      return (
+        <Badge className="bg-red-100 text-red-800 hover:bg-red-100">
+          удалено
+        </Badge>
+      );
     default:
       return <Badge variant="secondary">{status}</Badge>;
   }
@@ -126,7 +148,9 @@ export default function Equipment() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Выведено из эксплуатации</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Выведено из эксплуатации
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">1</div>
@@ -147,10 +171,7 @@ export default function Equipment() {
           <div className="flex items-center space-x-2 mb-4">
             <div className="relative flex-1">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Поиск оборудования..."
-                className="pl-8"
-              />
+              <Input placeholder="Поиск оборудования..." className="pl-8" />
             </div>
             <Button variant="outline">
               <Filter className="w-4 h-4 mr-2" />
@@ -186,7 +207,9 @@ export default function Equipment() {
                   <TableCell>{item.type}</TableCell>
                   <TableCell>{getStatusBadge(item.status)}</TableCell>
                   <TableCell>{item.location}</TableCell>
-                  <TableCell className="max-w-xs truncate">{item.specs}</TableCell>
+                  <TableCell className="max-w-xs truncate">
+                    {item.specs}
+                  </TableCell>
                   <TableCell>{item.responsible}</TableCell>
                   <TableCell>
                     <div className="flex items-center space-x-1">

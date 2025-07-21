@@ -171,7 +171,8 @@ export default function Dashboard() {
       <div className="border-b border-border pb-6">
         <h1 className="text-3xl font-bold mb-2">Панель управления</h1>
         <p className="text-muted-foreground">
-          Добро пожаловать в систему учета серверного оборудования и информационных систем
+          Добро пожаловать в систему учета серверного оборудования и
+          информационных систем
         </p>
       </div>
 
@@ -208,13 +209,14 @@ export default function Dashboard() {
               <Activity className="h-5 w-5" />
               <span>Состояние системы</span>
             </CardTitle>
-            <CardDescription>
-              Статус оборудования по категориям
-            </CardDescription>
+            <CardDescription>Статус оборудования по категориям</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {systemHealth.map((item) => (
-              <div key={item.category} className="flex items-center justify-between">
+              <div
+                key={item.category}
+                className="flex items-center justify-between"
+              >
                 <div className="flex flex-col">
                   <span className="font-medium">{item.category}</span>
                   <span className="text-sm text-muted-foreground">
@@ -232,7 +234,9 @@ export default function Dashboard() {
                       <span className="text-sm">{item.offline}</span>
                     </div>
                   )}
-                  <div className={`w-2 h-2 rounded-full ${getStatusColor(item.status).replace('text-', 'bg-')}`} />
+                  <div
+                    className={`w-2 h-2 rounded-full ${getStatusColor(item.status).replace("text-", "bg-")}`}
+                  />
                 </div>
               </div>
             ))}
@@ -251,9 +255,7 @@ export default function Dashboard() {
                 <Link to="/events">Все события</Link>
               </Button>
             </CardTitle>
-            <CardDescription>
-              Недавние изменения в системе
-            </CardDescription>
+            <CardDescription>Недавние изменения в системе</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {recentEvents.map((event) => {
@@ -268,8 +270,12 @@ export default function Dashboard() {
                       <p className="font-medium">{event.title}</p>
                       {getStatusBadge(event.status)}
                     </div>
-                    <p className="text-sm text-muted-foreground">{event.description}</p>
-                    <p className="text-xs text-muted-foreground">{event.time}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {event.description}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {event.time}
+                    </p>
                   </div>
                 </div>
               );
@@ -285,23 +291,27 @@ export default function Dashboard() {
             <TrendingUp className="h-5 w-5" />
             <span>Ключевые показатели</span>
           </CardTitle>
-          <CardDescription>
-            Общая статистика системы
-          </CardDescription>
+          <CardDescription>Общая статистика системы</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-3">
             <div className="text-center p-4 border rounded-lg">
               <div className="text-2xl font-bold text-green-600">95.8%</div>
-              <div className="text-sm text-muted-foreground">Время работы системы</div>
+              <div className="text-sm text-muted-foreground">
+                Время работы системы
+              </div>
             </div>
             <div className="text-center p-4 border rounded-lg">
               <div className="text-2xl font-bold text-blue-600">156</div>
-              <div className="text-sm text-muted-foreground">Активных лицензий ПО</div>
+              <div className="text-sm text-muted-foreground">
+                Активных лицензий ПО
+              </div>
             </div>
             <div className="text-center p-4 border rounded-lg">
               <div className="text-2xl font-bold text-purple-600">23</div>
-              <div className="text-sm text-muted-foreground">Единиц оборудования</div>
+              <div className="text-sm text-muted-foreground">
+                Единиц оборудования
+              </div>
             </div>
           </div>
         </CardContent>
