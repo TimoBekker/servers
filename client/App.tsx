@@ -9,6 +9,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import Equipment from "./pages/Equipment";
+import EquipmentDetail from "./pages/EquipmentDetail";
 import InformationSystems from "./pages/InformationSystems";
 import Software from "./pages/Software";
 import SoftwareDistributions from "./pages/SoftwareDistributions";
