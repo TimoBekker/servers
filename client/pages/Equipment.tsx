@@ -24,7 +24,7 @@ const equipment = [
     id: "SRV-001",
     name: "Сервер DB-01",
     type: "Сервер",
-    status: "Активен",
+    status: "в работе",
     location: "Стойка A1",
     specs: "Intel Xeon, 64GB RAM, 2TB SSD",
     responsible: "Иванов И.И.",
@@ -33,7 +33,7 @@ const equipment = [
     id: "SW-001",
     name: "Коммутатор Core-01",
     type: "Сетевое оборудование",
-    status: "Активен",
+    status: "в работе",
     location: "Стойка A2",
     specs: "48 портов Gigabit, 4x 10GB SFP+",
     responsible: "Петров П.П.",
@@ -42,10 +42,19 @@ const equipment = [
     id: "UPS-001",
     name: "ИБП Rack-01",
     type: "Электропитание",
-    status: "На обслуживании",
+    status: "выключено / не в работе",
     location: "Стойка A1",
     specs: "3000VA, Online, 8 розеток",
     responsible: "Сидоров С.С.",
+  },
+  {
+    id: "SRV-002",
+    name: "Сервер Legacy-01",
+    type: "Сервер",
+    status: "выведено из эксплуатации",
+    location: "Склад",
+    specs: "Intel Pentium 4, 4GB RAM, 500GB HDD",
+    responsible: "Архивариус А.А.",
   },
 ];
 
@@ -126,7 +135,7 @@ export default function Equipment() {
       {/* Filters and Search */}
       <Card>
         <CardHeader>
-          <CardTitle>Список оборудования</CardTitle>
+          <CardTitle>Списо�� оборудования</CardTitle>
           <CardDescription>
             Полный список серверного и сетевого оборудования
           </CardDescription>
