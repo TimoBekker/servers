@@ -8,6 +8,8 @@ const BUILDER_API_KEY = import.meta.env.VITE_BUILDER_API_KEY;
 
 if (BUILDER_API_KEY) {
   builder.init(BUILDER_API_KEY);
+  // Регистрируем компоненты
+  registerBuilderComponents();
 } else {
   console.warn('Builder.io API key is missing. Please add VITE_BUILDER_API_KEY to your .env.local file');
 }
@@ -74,7 +76,7 @@ export function BuilderPage({
           <div className="mt-4 p-4 bg-muted rounded-md text-sm">
             <p>Для работы с Builder.io необходимо:</p>
             <ol className="list-decimal list-inside mt-2 space-y-1">
-              <li>Зарегистрироваться на <a href="https://builder.io" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">builder.io</a></li>
+              <li>Зарегистрироваться н�� <a href="https://builder.io" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">builder.io</a></li>
               <li>Получить API ключ в настройках</li>
               <li>Добавить VITE_BUILDER_API_KEY в .env.local файл</li>
             </ol>
