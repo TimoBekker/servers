@@ -22,6 +22,8 @@ import ReportsResponsible from "./pages/ReportsResponsible";
 import ReportsResources from "./pages/ReportsResources";
 import ReportsLicenses from "./pages/ReportsLicenses";
 import ApiTest from "./pages/ApiTest";
+import BuilderAdmin from "./pages/BuilderAdmin";
+import BuilderPageRoute from "./pages/BuilderPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
