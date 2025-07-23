@@ -1,4 +1,5 @@
 import { builder, BuilderComponent, useIsPreviewing } from '@builder.io/react';
+import { registerBuilderComponents } from '@/components/builder';
 import { useEffect, useState } from 'react';
 import { LoadingSpinner } from '@/components/ui/loading-state';
 
