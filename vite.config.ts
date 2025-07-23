@@ -9,20 +9,20 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
     proxy: {
-      '/laravel-api': {
-        target: 'http://192.168.126.143:8000',
+      "/laravel-api": {
+        target: "http://192.168.126.143:8000",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/laravel-api/, '/api'),
+        rewrite: (path) => path.replace(/^\/laravel-api/, "/api"),
         configure: (proxy, options) => {
-          proxy.on('error', (err, req, res) => {
-            console.log('Laravel API proxy error:', err);
+          proxy.on("error", (err, req, res) => {
+            console.log("Laravel API proxy error:", err);
           });
-          proxy.on('proxyReq', (proxyReq, req, res) => {
-            console.log('Proxying to Laravel API:', req.url);
+          proxy.on("proxyReq", (proxyReq, req, res) => {
+            console.log("Proxying to Laravel API:", req.url);
           });
-        }
-      }
-    }
+        },
+      },
+    },
   },
   build: {
     outDir: "dist/spa",

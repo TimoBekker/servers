@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import { apiService } from '@/lib/api';
+import { useEffect, useState } from "react";
+import { apiService } from "@/lib/api";
 
 // Generic hook for API requests
 export function useApiData<T>(
   apiCall: () => Promise<T>,
-  dependencies: any[] = []
+  dependencies: any[] = [],
 ) {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
@@ -23,7 +23,7 @@ export function useApiData<T>(
         }
       } catch (err) {
         if (isMounted) {
-          setError(err instanceof Error ? err.message : 'An error occurred');
+          setError(err instanceof Error ? err.message : "An error occurred");
         }
       } finally {
         if (isMounted) {
@@ -46,7 +46,7 @@ export function useApiData<T>(
       const result = await apiCall();
       setData(result);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
       setLoading(false);
     }
@@ -76,43 +76,25 @@ export function useEquipment(filters?: {
   page?: number;
   per_page?: number;
 }) {
-  return useApiData(
-    () => apiService.getEquipment(filters),
-    [filters]
-  );
+  return useApiData(() => apiService.getEquipment(filters), [filters]);
 }
 
 export function useEquipmentById(id: string) {
-  return useApiData(
-    () => apiService.getEquipmentById(id),
-    [id]
-  );
+  return useApiData(() => apiService.getEquipmentById(id), [id]);
 }
 
 export function useInformationSystems(filters?: any) {
-  return useApiData(
-    () => apiService.getInformationSystems(filters),
-    [filters]
-  );
+  return useApiData(() => apiService.getInformationSystems(filters), [filters]);
 }
 
 export function useContracts(filters?: any) {
-  return useApiData(
-    () => apiService.getContracts(filters),
-    [filters]
-  );
+  return useApiData(() => apiService.getContracts(filters), [filters]);
 }
 
 export function useEvents(filters?: any) {
-  return useApiData(
-    () => apiService.getEvents(filters),
-    [filters]
-  );
+  return useApiData(() => apiService.getEvents(filters), [filters]);
 }
 
 export function useSoftware(filters?: any) {
-  return useApiData(
-    () => apiService.getSoftware(filters),
-    [filters]
-  );
+  return useApiData(() => apiService.getSoftware(filters), [filters]);
 }

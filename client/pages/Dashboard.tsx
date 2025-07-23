@@ -20,7 +20,11 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LoadingState } from "@/components/ui/loading-state";
-import { useDashboardStats, useSystemHealth, useRecentEvents } from "@/hooks/use-api";
+import {
+  useDashboardStats,
+  useSystemHealth,
+  useRecentEvents,
+} from "@/hooks/use-api";
 import type { DashboardStats, SystemHealth, Event } from "@/lib/api";
 
 const getQuickStats = (stats: DashboardStats | null) => [
@@ -57,10 +61,6 @@ const getQuickStats = (stats: DashboardStats | null) => [
     color: "text-orange-600",
   },
 ];
-
-
-
-
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -106,9 +106,24 @@ const getStatusBadge = (status: string) => {
 };
 
 export default function Dashboard() {
-  const { data: dashboardStats, loading: statsLoading, error: statsError, refetch: refetchStats } = useDashboardStats();
-  const { data: systemHealth, loading: healthLoading, error: healthError, refetch: refetchHealth } = useSystemHealth();
-  const { data: recentEvents, loading: eventsLoading, error: eventsError, refetch: refetchEvents } = useRecentEvents();
+  const {
+    data: dashboardStats,
+    loading: statsLoading,
+    error: statsError,
+    refetch: refetchStats,
+  } = useDashboardStats();
+  const {
+    data: systemHealth,
+    loading: healthLoading,
+    error: healthError,
+    refetch: refetchHealth,
+  } = useSystemHealth();
+  const {
+    data: recentEvents,
+    loading: eventsLoading,
+    error: eventsError,
+    refetch: refetchEvents,
+  } = useRecentEvents();
 
   const quickStats = getQuickStats(dashboardStats);
 
@@ -124,7 +139,11 @@ export default function Dashboard() {
       </div>
 
       {/* Quick Stats */}
-      <LoadingState loading={statsLoading} error={statsError} onRetry={refetchStats}>
+      <LoadingState
+        loading={statsLoading}
+        error={statsError}
+        onRetry={refetchStats}
+      >
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {quickStats.map((stat) => {
             const IconComponent = stat.icon;
@@ -152,14 +171,20 @@ export default function Dashboard() {
 
       <div className="grid gap-6 md:grid-cols-2">
         {/* System Health */}
-        <LoadingState loading={healthLoading} error={healthError} onRetry={refetchHealth}>
+        <LoadingState
+          loading={healthLoading}
+          error={healthError}
+          onRetry={refetchHealth}
+        >
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Activity className="h-5 w-5" />
                 <span>Состояние системы</span>
               </CardTitle>
-              <CardDescription>Статус оборудования по категориям</CardDescription>
+              <CardDescription>
+                Статус оборудования по категориям
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {systemHealth?.map((item: SystemHealth) => (
@@ -195,7 +220,11 @@ export default function Dashboard() {
         </LoadingState>
 
         {/* Recent Events */}
-        <LoadingState loading={eventsLoading} error={eventsError} onRetry={refetchEvents}>
+        <LoadingState
+          loading={eventsLoading}
+          error={eventsError}
+          onRetry={refetchEvents}
+        >
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">

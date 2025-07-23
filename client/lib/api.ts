@@ -2,8 +2,8 @@
 
 // Use proxy in development, direct URL in production
 const API_BASE_URL = import.meta.env.DEV
-  ? '/laravel-api'
-  : (import.meta.env.VITE_API_URL || 'http://192.168.126.143:8000/api');
+  ? "/laravel-api"
+  : import.meta.env.VITE_API_URL || "http://192.168.126.143:8000/api";
 
 class ApiService {
   private baseUrl: string;
@@ -14,19 +14,19 @@ class ApiService {
 
   private async request<T>(
     endpoint: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
   ): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
-    
+
     const defaultHeaders = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
+      "Content-Type": "application/json",
+      Accept: "application/json",
     };
 
     // Add authentication headers if needed
-    const token = localStorage.getItem('auth_token');
+    const token = localStorage.getItem("auth_token");
     if (token) {
-      defaultHeaders['Authorization'] = `Bearer ${token}`;
+      defaultHeaders["Authorization"] = `Bearer ${token}`;
     }
 
     const config: RequestInit = {
@@ -39,7 +39,7 @@ class ApiService {
 
     try {
       const response = await fetch(url, config);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -54,15 +54,15 @@ class ApiService {
 
   // Dashboard API
   async getDashboardStats() {
-    return this.request('/dashboard/stats');
+    return this.request("/dashboard/stats");
   }
 
   async getSystemHealth() {
-    return this.request('/dashboard/system-health');
+    return this.request("/dashboard/system-health");
   }
 
   async getRecentEvents() {
-    return this.request('/dashboard/recent-events');
+    return this.request("/dashboard/recent-events");
   }
 
   // Equipment API
@@ -81,9 +81,9 @@ class ApiService {
         }
       });
     }
-    
+
     const query = params.toString();
-    return this.request(`/equipment${query ? `?${query}` : ''}`);
+    return this.request(`/equipment${query ? `?${query}` : ""}`);
   }
 
   async getEquipmentById(id: string) {
@@ -91,22 +91,22 @@ class ApiService {
   }
 
   async createEquipment(data: any) {
-    return this.request('/equipment', {
-      method: 'POST',
+    return this.request("/equipment", {
+      method: "POST",
       body: JSON.stringify(data),
     });
   }
 
   async updateEquipment(id: string, data: any) {
     return this.request(`/equipment/${id}`, {
-      method: 'PUT',
+      method: "PUT",
       body: JSON.stringify(data),
     });
   }
 
   async deleteEquipment(id: string) {
     return this.request(`/equipment/${id}`, {
-      method: 'DELETE',
+      method: "DELETE",
     });
   }
 
@@ -120,9 +120,9 @@ class ApiService {
         }
       });
     }
-    
+
     const query = params.toString();
-    return this.request(`/information-systems${query ? `?${query}` : ''}`);
+    return this.request(`/information-systems${query ? `?${query}` : ""}`);
   }
 
   async getInformationSystemById(id: string) {
@@ -139,9 +139,9 @@ class ApiService {
         }
       });
     }
-    
+
     const query = params.toString();
-    return this.request(`/contracts${query ? `?${query}` : ''}`);
+    return this.request(`/contracts${query ? `?${query}` : ""}`);
   }
 
   async getContractById(id: string) {
@@ -158,9 +158,9 @@ class ApiService {
         }
       });
     }
-    
+
     const query = params.toString();
-    return this.request(`/events${query ? `?${query}` : ''}`);
+    return this.request(`/events${query ? `?${query}` : ""}`);
   }
 
   // Software API
@@ -173,27 +173,27 @@ class ApiService {
         }
       });
     }
-    
+
     const query = params.toString();
-    return this.request(`/software${query ? `?${query}` : ''}`);
+    return this.request(`/software${query ? `?${query}` : ""}`);
   }
 
   // Authentication API (if needed)
   async login(credentials: { email: string; password: string }) {
-    return this.request('/auth/login', {
-      method: 'POST',
+    return this.request("/auth/login", {
+      method: "POST",
       body: JSON.stringify(credentials),
     });
   }
 
   async logout() {
-    return this.request('/auth/logout', {
-      method: 'POST',
+    return this.request("/auth/logout", {
+      method: "POST",
     });
   }
 
   async getCurrentUser() {
-    return this.request('/auth/user');
+    return this.request("/auth/user");
   }
 }
 

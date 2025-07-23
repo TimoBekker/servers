@@ -70,17 +70,17 @@ const getStatusBadge = (status: string) => {
 
 const formatDate = (dateString: string) => {
   try {
-    return new Date(dateString).toLocaleDateString('ru-RU');
+    return new Date(dateString).toLocaleDateString("ru-RU");
   } catch {
     return dateString;
   }
 };
 
 const formatAmount = (amount: number | undefined) => {
-  if (!amount) return 'н/д';
-  return new Intl.NumberFormat('ru-RU', {
-    style: 'currency',
-    currency: 'RUB',
+  if (!amount) return "н/д";
+  return new Intl.NumberFormat("ru-RU", {
+    style: "currency",
+    currency: "RUB",
   }).format(amount);
 };
 
@@ -91,7 +91,12 @@ export default function Contracts() {
     status?: string;
   }>({});
 
-  const { data: contractsResponse, loading, error, refetch } = useContracts({
+  const {
+    data: contractsResponse,
+    loading,
+    error,
+    refetch,
+  } = useContracts({
     ...filters,
     search: searchQuery,
   });
@@ -136,9 +141,7 @@ export default function Contracts() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.total}</div>
-              <p className="text-xs text-muted-foreground">
-                всего договоров
-              </p>
+              <p className="text-xs text-muted-foreground">всего договоров</p>
             </CardContent>
           </Card>
           <Card>
@@ -149,7 +152,10 @@ export default function Contracts() {
             <CardContent>
               <div className="text-2xl font-bold">{stats.active}</div>
               <p className="text-xs text-muted-foreground">
-                {stats.total > 0 ? ((stats.active / stats.total) * 100).toFixed(1) : 0}% от общего
+                {stats.total > 0
+                  ? ((stats.active / stats.total) * 100).toFixed(1)
+                  : 0}
+                % от общего
               </p>
             </CardContent>
           </Card>
@@ -172,9 +178,7 @@ export default function Contracts() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.expired}</div>
-              <p className="text-xs text-muted-foreground">
-                требуют продления
-              </p>
+              <p className="text-xs text-muted-foreground">требуют продления</p>
             </CardContent>
           </Card>
         </div>
@@ -235,7 +239,7 @@ export default function Contracts() {
                     <TableCell>{formatDate(item.start_date)}</TableCell>
                     <TableCell>{formatDate(item.end_date)}</TableCell>
                     <TableCell>{formatAmount(item.amount)}</TableCell>
-                    <TableCell>{item.supplier || 'н/д'}</TableCell>
+                    <TableCell>{item.supplier || "н/д"}</TableCell>
                     <TableCell>
                       <div className="flex items-center space-x-1">
                         <Button variant="ghost" size="sm" asChild>
@@ -252,7 +256,10 @@ export default function Contracts() {
                 ))}
                 {contracts.length === 0 && !loading && (
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                    <TableCell
+                      colSpan={8}
+                      className="text-center py-8 text-muted-foreground"
+                    >
                       Контракты не найдены
                     </TableCell>
                   </TableRow>

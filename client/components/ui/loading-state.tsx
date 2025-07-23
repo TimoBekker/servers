@@ -9,7 +9,12 @@ interface LoadingStateProps {
   children: React.ReactNode;
 }
 
-export function LoadingState({ loading, error, onRetry, children }: LoadingStateProps) {
+export function LoadingState({
+  loading,
+  error,
+  onRetry,
+  children,
+}: LoadingStateProps) {
   if (loading) {
     return (
       <Card>
@@ -51,19 +56,19 @@ export function LoadingState({ loading, error, onRetry, children }: LoadingState
 export function LoadingSpinner({ size = "sm" }: { size?: "sm" | "md" | "lg" }) {
   const sizeClass = {
     sm: "h-4 w-4",
-    md: "h-6 w-6", 
-    lg: "h-8 w-8"
+    md: "h-6 w-6",
+    lg: "h-8 w-8",
   }[size];
 
   return <Loader2 className={`${sizeClass} animate-spin`} />;
 }
 
 // Error message component
-export function ErrorMessage({ 
-  error, 
-  onRetry 
-}: { 
-  error: string; 
+export function ErrorMessage({
+  error,
+  onRetry,
+}: {
+  error: string;
   onRetry?: () => void;
 }) {
   return (

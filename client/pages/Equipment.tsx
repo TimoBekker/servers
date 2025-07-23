@@ -29,8 +29,6 @@ import { useEquipment } from "@/hooks/use-api";
 import type { Equipment } from "@/lib/api";
 import { useState } from "react";
 
-
-
 const getStatusBadge = (status: string) => {
   switch (status) {
     case "в работе":
@@ -70,7 +68,12 @@ export default function Equipment() {
     type?: string;
   }>({});
 
-  const { data: equipmentResponse, loading, error, refetch } = useEquipment({
+  const {
+    data: equipmentResponse,
+    loading,
+    error,
+    refetch,
+  } = useEquipment({
     ...filters,
     search: searchQuery,
   });
@@ -114,9 +117,7 @@ export default function Equipment() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.total}</div>
-              <p className="text-xs text-muted-foreground">
-                всего единиц
-              </p>
+              <p className="text-xs text-muted-foreground">всего единиц</p>
             </CardContent>
           </Card>
           <Card>
@@ -126,7 +127,10 @@ export default function Equipment() {
             <CardContent>
               <div className="text-2xl font-bold">{stats.active}</div>
               <p className="text-xs text-muted-foreground">
-                {stats.total > 0 ? ((stats.active / stats.total) * 100).toFixed(1) : 0}% от общего
+                {stats.total > 0
+                  ? ((stats.active / stats.total) * 100).toFixed(1)
+                  : 0}
+                % от общего
               </p>
             </CardContent>
           </Card>
@@ -137,7 +141,10 @@ export default function Equipment() {
             <CardContent>
               <div className="text-2xl font-bold">{stats.inactive}</div>
               <p className="text-xs text-muted-foreground">
-                {stats.total > 0 ? ((stats.inactive / stats.total) * 100).toFixed(1) : 0}% от общего
+                {stats.total > 0
+                  ? ((stats.inactive / stats.total) * 100).toFixed(1)
+                  : 0}
+                % от общего
               </p>
             </CardContent>
           </Card>
@@ -150,7 +157,10 @@ export default function Equipment() {
             <CardContent>
               <div className="text-2xl font-bold">{stats.decommissioned}</div>
               <p className="text-xs text-muted-foreground">
-                {stats.total > 0 ? ((stats.decommissioned / stats.total) * 100).toFixed(1) : 0}% от общего
+                {stats.total > 0
+                  ? ((stats.decommissioned / stats.total) * 100).toFixed(1)
+                  : 0}
+                % от общего
               </p>
             </CardContent>
           </Card>
@@ -230,7 +240,10 @@ export default function Equipment() {
               ))}
               {equipment.length === 0 && !loading && (
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                  <TableCell
+                    colSpan={8}
+                    className="text-center py-8 text-muted-foreground"
+                  >
                     Оборудование не найдено
                   </TableCell>
                 </TableRow>
