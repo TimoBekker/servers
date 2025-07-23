@@ -24,46 +24,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { LoadingState } from "@/components/ui/loading-state";
+import { useEquipment } from "@/hooks/use-api";
+import type { Equipment } from "@/lib/api";
+import { useState } from "react";
 
-// Sample equipment data
-const equipment = [
-  {
-    id: "SRV-001",
-    name: "Сервер DB-01",
-    type: "Сервер",
-    status: "в работе",
-    location: "Стойка A1",
-    specs: "Intel Xeon, 64GB RAM, 2TB SSD",
-    responsible: "Иванов И.И.",
-  },
-  {
-    id: "SW-001",
-    name: "Коммутатор Core-01",
-    type: "Сетевое оборудование",
-    status: "в работе",
-    location: "Стойка A2",
-    specs: "48 портов Gigabit, 4x 10GB SFP+",
-    responsible: "Петров П.П.",
-  },
-  {
-    id: "UPS-001",
-    name: "ИБП Rack-01",
-    type: "Электропитание",
-    status: "выключено / не в работе",
-    location: "Стойка A1",
-    specs: "3000VA, Online, 8 розеток",
-    responsible: "Сидоров С.С.",
-  },
-  {
-    id: "SRV-002",
-    name: "Сервер Legacy-01",
-    type: "Сервер",
-    status: "выведено из эксплуатации",
-    location: "Склад",
-    specs: "Intel Pentium 4, 4GB RAM, 500GB HDD",
-    responsible: "Архивариус А.А.",
-  },
-];
+
 
 const getStatusBadge = (status: string) => {
   switch (status) {
@@ -97,6 +63,30 @@ const getStatusBadge = (status: string) => {
 };
 
 export default function Equipment() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filters, setFilters] = useState<{
+    search?: string;
+    status?: string;
+    type?: string;
+  }>({});
+
+  const { data: equipmentResponse, loading, error, refetch } = useEquipment({
+    ...filters,
+    search: searchQuery,
+  });
+
+  const equipment = equipmentResponse?.data || [];
+  const stats = equipmentResponse?.stats || {
+    total: 0,
+    active: 0,
+    inactive: 0,
+    decommissioned: 0,
+  };
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -104,7 +94,7 @@ export default function Equipment() {
         <div>
           <h1 className="text-3xl font-bold">Оборудование</h1>
           <p className="text-muted-foreground">
-            Управление серверным и сетевым оборудованием
+            Управление серверным и се��евым оборудованием
           </p>
         </div>
         <Button>
@@ -114,50 +104,58 @@ export default function Equipment() {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid gap-4 md:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Всего оборудования
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">24</div>
-            <p className="text-xs text-muted-foreground">
-              +2 за последний месяц
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">В работе</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">22</div>
-            <p className="text-xs text-muted-foreground">91.7% от общего</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Выключено</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">1</div>
-            <p className="text-xs text-muted-foreground">4.2% от общего</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Выведено из эксплуатации
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">1</div>
-            <p className="text-xs text-muted-foreground">4.2% от общего</p>
-          </CardContent>
-        </Card>
-      </div>
+      <LoadingState loading={loading} error={error} onRetry={refetch}>
+        <div className="grid gap-4 md:grid-cols-4">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Всего оборудования
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.total}</div>
+              <p className="text-xs text-muted-foreground">
+                всего единиц
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">В работе</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.active}</div>
+              <p className="text-xs text-muted-foreground">
+                {stats.total > 0 ? ((stats.active / stats.total) * 100).toFixed(1) : 0}% от общего
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Выключено</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.inactive}</div>
+              <p className="text-xs text-muted-foreground">
+                {stats.total > 0 ? ((stats.inactive / stats.total) * 100).toFixed(1) : 0}% от общего
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                Выведено из эксплуатации
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.decommissioned}</div>
+              <p className="text-xs text-muted-foreground">
+                {stats.total > 0 ? ((stats.decommissioned / stats.total) * 100).toFixed(1) : 0}% от общего
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </LoadingState>
 
       {/* Filters and Search */}
       <Card>
@@ -171,7 +169,12 @@ export default function Equipment() {
           <div className="flex items-center space-x-2 mb-4">
             <div className="relative flex-1">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Поиск оборудования..." className="pl-8" />
+              <Input
+                placeholder="Поиск оборудования..."
+                className="pl-8"
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
+              />
             </div>
             <Button variant="outline">
               <Filter className="w-4 h-4 mr-2" />
@@ -193,7 +196,7 @@ export default function Equipment() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {equipment.map((item) => (
+              {equipment.map((item: Equipment) => (
                 <TableRow key={item.id}>
                   <TableCell className="font-medium">{item.id}</TableCell>
                   <TableCell>
@@ -225,6 +228,13 @@ export default function Equipment() {
                   </TableCell>
                 </TableRow>
               ))}
+              {equipment.length === 0 && !loading && (
+                <TableRow>
+                  <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                    Оборудование не найдено
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </CardContent>
