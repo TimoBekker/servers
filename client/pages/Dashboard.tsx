@@ -19,11 +19,18 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { LoadingState } from "@/components/ui/loading-state";
+import {
+  useDashboardStats,
+  useSystemHealth,
+  useRecentEvents,
+} from "@/hooks/use-api";
+import type { DashboardStats, SystemHealth, Event } from "@/lib/api";
 
-const quickStats = [
+const getQuickStats = (stats: DashboardStats | null) => [
   {
     title: "Оборудование",
-    value: "24",
+    value: stats?.equipment_count?.toString() || "0",
     description: "единицы оборудования",
     icon: Server,
     href: "/equipment",
@@ -31,7 +38,7 @@ const quickStats = [
   },
   {
     title: "ИС",
-    value: "12",
+    value: stats?.information_systems_count?.toString() || "0",
     description: "информационных систем",
     icon: Monitor,
     href: "/information-systems",
@@ -39,7 +46,7 @@ const quickStats = [
   },
   {
     title: "Установленное ПО",
-    value: "156",
+    value: stats?.software_count?.toString() || "0",
     description: "программных продуктов",
     icon: Package,
     href: "/software/installed",
@@ -47,77 +54,11 @@ const quickStats = [
   },
   {
     title: "Активные контракты",
-    value: "8",
+    value: stats?.contracts_count?.toString() || "0",
     description: "действующих договоров",
     icon: FileText,
     href: "/contracts",
     color: "text-orange-600",
-  },
-];
-
-const recentEvents = [
-  {
-    id: 1,
-    type: "equipment",
-    title: "Добавлен новый сервер",
-    description: "Сервер DB-02 добавлен в стойку B1",
-    time: "2 часа назад",
-    status: "success",
-  },
-  {
-    id: 2,
-    type: "maintenance",
-    title: "Плановое обслуживание",
-    description: "ИБП UPS-001 переведен на обслуживание",
-    time: "4 часа назад",
-    status: "warning",
-  },
-  {
-    id: 3,
-    type: "software",
-    title: "Обновление ПО",
-    description: "Обновлена операционная система на SRV-001",
-    time: "1 день назад",
-    status: "success",
-  },
-  {
-    id: 4,
-    type: "contract",
-    title: "Истекает контракт",
-    description: "Контракт на поддержку ПО истекает через 30 дней",
-    time: "2 дня назад",
-    status: "error",
-  },
-];
-
-const systemHealth = [
-  {
-    category: "Серверы",
-    total: 8,
-    online: 7,
-    offline: 1,
-    status: "good",
-  },
-  {
-    category: "Сетевое оборудование",
-    total: 6,
-    online: 6,
-    offline: 0,
-    status: "excellent",
-  },
-  {
-    category: "Системы хранения",
-    total: 4,
-    online: 3,
-    offline: 1,
-    status: "warning",
-  },
-  {
-    category: "ИБП",
-    total: 6,
-    online: 5,
-    offline: 1,
-    status: "good",
   },
 ];
 
@@ -165,6 +106,27 @@ const getStatusBadge = (status: string) => {
 };
 
 export default function Dashboard() {
+  const {
+    data: dashboardStats,
+    loading: statsLoading,
+    error: statsError,
+    refetch: refetchStats,
+  } = useDashboardStats();
+  const {
+    data: systemHealth,
+    loading: healthLoading,
+    error: healthError,
+    refetch: refetchHealth,
+  } = useSystemHealth();
+  const {
+    data: recentEvents,
+    loading: eventsLoading,
+    error: eventsError,
+    refetch: refetchEvents,
+  } = useRecentEvents();
+
+  const quickStats = getQuickStats(dashboardStats);
+
   return (
     <div className="space-y-6">
       {/* Welcome Header */}
@@ -177,111 +139,131 @@ export default function Dashboard() {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {quickStats.map((stat) => {
-          const IconComponent = stat.icon;
-          return (
-            <Link key={stat.title} to={stat.href}>
-              <Card className="hover:shadow-md transition-shadow cursor-pointer">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">
-                    {stat.title}
-                  </CardTitle>
-                  <IconComponent className={`h-4 w-4 ${stat.color}`} />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{stat.value}</div>
-                  <p className="text-xs text-muted-foreground">
-                    {stat.description}
-                  </p>
-                </CardContent>
-              </Card>
-            </Link>
-          );
-        })}
-      </div>
+      <LoadingState
+        loading={statsLoading}
+        error={statsError}
+        onRetry={refetchStats}
+      >
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          {quickStats.map((stat) => {
+            const IconComponent = stat.icon;
+            return (
+              <Link key={stat.title} to={stat.href}>
+                <Card className="hover:shadow-md transition-shadow cursor-pointer">
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      {stat.title}
+                    </CardTitle>
+                    <IconComponent className={`h-4 w-4 ${stat.color}`} />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{stat.value}</div>
+                    <p className="text-xs text-muted-foreground">
+                      {stat.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              </Link>
+            );
+          })}
+        </div>
+      </LoadingState>
 
       <div className="grid gap-6 md:grid-cols-2">
         {/* System Health */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Activity className="h-5 w-5" />
-              <span>Состояние системы</span>
-            </CardTitle>
-            <CardDescription>Статус оборудования по категориям</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {systemHealth.map((item) => (
-              <div
-                key={item.category}
-                className="flex items-center justify-between"
-              >
-                <div className="flex flex-col">
-                  <span className="font-medium">{item.category}</span>
-                  <span className="text-sm text-muted-foreground">
-                    {item.online} из {item.total} активны
-                  </span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="flex items-center space-x-1">
-                    <CheckCircle className="h-4 w-4 text-green-600" />
-                    <span className="text-sm">{item.online}</span>
+        <LoadingState
+          loading={healthLoading}
+          error={healthError}
+          onRetry={refetchHealth}
+        >
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Activity className="h-5 w-5" />
+                <span>Состояние системы</span>
+              </CardTitle>
+              <CardDescription>
+                Статус оборудования по категориям
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {systemHealth?.map((item: SystemHealth) => (
+                <div
+                  key={item.category}
+                  className="flex items-center justify-between"
+                >
+                  <div className="flex flex-col">
+                    <span className="font-medium">{item.category}</span>
+                    <span className="text-sm text-muted-foreground">
+                      {item.online} из {item.total} активны
+                    </span>
                   </div>
-                  {item.offline > 0 && (
+                  <div className="flex items-center space-x-2">
                     <div className="flex items-center space-x-1">
-                      <AlertTriangle className="h-4 w-4 text-red-600" />
-                      <span className="text-sm">{item.offline}</span>
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                      <span className="text-sm">{item.online}</span>
                     </div>
-                  )}
-                  <div
-                    className={`w-2 h-2 rounded-full ${getStatusColor(item.status).replace("text-", "bg-")}`}
-                  />
+                    {item.offline > 0 && (
+                      <div className="flex items-center space-x-1">
+                        <AlertTriangle className="h-4 w-4 text-red-600" />
+                        <span className="text-sm">{item.offline}</span>
+                      </div>
+                    )}
+                    <div
+                      className={`w-2 h-2 rounded-full ${getStatusColor(item.status).replace("text-", "bg-")}`}
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+              )) || []}
+            </CardContent>
+          </Card>
+        </LoadingState>
 
         {/* Recent Events */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Calendar className="h-5 w-5" />
-                <span>Последние события</span>
-              </div>
-              <Button variant="outline" size="sm" asChild>
-                <Link to="/events">Все события</Link>
-              </Button>
-            </CardTitle>
-            <CardDescription>Недавние изменения в системе</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {recentEvents.map((event) => {
-              const IconComponent = getEventIcon(event.type);
-              return (
-                <div key={event.id} className="flex items-start space-x-3">
-                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted">
-                    <IconComponent className="h-4 w-4" />
-                  </div>
-                  <div className="flex-1 space-y-1">
-                    <div className="flex items-center justify-between">
-                      <p className="font-medium">{event.title}</p>
-                      {getStatusBadge(event.status)}
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      {event.description}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {event.time}
-                    </p>
-                  </div>
+        <LoadingState
+          loading={eventsLoading}
+          error={eventsError}
+          onRetry={refetchEvents}
+        >
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Calendar className="h-5 w-5" />
+                  <span>Последние события</span>
                 </div>
-              );
-            })}
-          </CardContent>
-        </Card>
+                <Button variant="outline" size="sm" asChild>
+                  <Link to="/events">Все события</Link>
+                </Button>
+              </CardTitle>
+              <CardDescription>Недавние изменения в системе</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {recentEvents?.map((event: Event) => {
+                const IconComponent = getEventIcon(event.type);
+                return (
+                  <div key={event.id} className="flex items-start space-x-3">
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-muted">
+                      <IconComponent className="h-4 w-4" />
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      <div className="flex items-center justify-between">
+                        <p className="font-medium">{event.title}</p>
+                        {getStatusBadge(event.status)}
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        {event.description}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {event.time}
+                      </p>
+                    </div>
+                  </div>
+                );
+              }) || []}
+            </CardContent>
+          </Card>
+        </LoadingState>
       </div>
 
       {/* Performance Metrics */}

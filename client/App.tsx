@@ -21,6 +21,10 @@ import Reports from "./pages/Reports";
 import ReportsResponsible from "./pages/ReportsResponsible";
 import ReportsResources from "./pages/ReportsResources";
 import ReportsLicenses from "./pages/ReportsLicenses";
+import ApiTest from "./pages/ApiTest";
+import Test from "./pages/Test";
+import BuilderAdminSafe from "./pages/BuilderAdminSafe";
+import BuilderPageSafe from "./pages/BuilderPageSafe";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -56,6 +60,10 @@ const App = () => (
             />
             <Route path="/reports/resources" element={<ReportsResources />} />
             <Route path="/reports/licenses" element={<ReportsLicenses />} />
+            <Route path="/api-test" element={<ApiTest />} />
+            <Route path="/test" element={<Test />} />
+            <Route path="/builder-admin" element={<BuilderAdminSafe />} />
+            <Route path="/builder-preview/*" element={<BuilderPageSafe />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
