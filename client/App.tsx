@@ -23,9 +23,8 @@ import ReportsResources from "./pages/ReportsResources";
 import ReportsLicenses from "./pages/ReportsLicenses";
 import ApiTest from "./pages/ApiTest";
 import Test from "./pages/Test";
-// Временно закомментируем Builder.io импорты
-// import BuilderAdmin from "./pages/BuilderAdmin";
-// import BuilderPageRoute from "./pages/BuilderPage";
+import BuilderAdminSafe from "./pages/BuilderAdminSafe";
+import BuilderPageSafe from "./pages/BuilderPageSafe";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
