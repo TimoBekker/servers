@@ -61,8 +61,36 @@ builder.registerComponent(CardHeader, {
   ],
 });
 
+// Создадим обертки для компонентов с текстом
+const CardTitleWrapper = ({ text, className, ...props }: { text?: string; className?: string }) => (
+  <CardTitle className={className} {...props}>
+    {text}
+  </CardTitle>
+);
+
+const CardDescriptionWrapper = ({ text, className, ...props }: { text?: string; className?: string }) => (
+  <CardDescription className={className} {...props}>
+    {text}
+  </CardDescription>
+);
+
+const ButtonWrapper = ({ text, onClick, ...props }: { text?: string; onClick?: string; [key: string]: any }) => (
+  <Button 
+    {...props}
+    onClick={onClick ? () => eval(onClick) : undefined}
+  >
+    {text}
+  </Button>
+);
+
+const BadgeWrapper = ({ text, ...props }: { text?: string; [key: string]: any }) => (
+  <Badge {...props}>
+    {text}
+  </Badge>
+);
+
 // Регистрация компонента CardTitle
-builder.registerComponent(CardTitle, {
+builder.registerComponent(CardTitleWrapper, {
   name: 'CardTitle',
   inputs: [
     {
@@ -80,7 +108,7 @@ builder.registerComponent(CardTitle, {
 });
 
 // Регистрация компонента CardDescription
-builder.registerComponent(CardDescription, {
+builder.registerComponent(CardDescriptionWrapper, {
   name: 'CardDescription',
   inputs: [
     {
@@ -111,7 +139,7 @@ builder.registerComponent(CardContent, {
 });
 
 // Регистрация компонента Button
-builder.registerComponent(Button, {
+builder.registerComponent(ButtonWrapper, {
   name: 'Button',
   inputs: [
     {
@@ -147,7 +175,7 @@ builder.registerComponent(Button, {
 });
 
 // Регистрация компонента Badge
-builder.registerComponent(Badge, {
+builder.registerComponent(BadgeWrapper, {
   name: 'Badge',
   inputs: [
     {
@@ -170,14 +198,14 @@ const StatsDisplay = ({ title, apiEndpoint }: { title?: string; apiEndpoint?: st
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{title || 'Статистика'}</CardTitle>
+        <CardTitle>{title || "Статистика"}</CardTitle>
         <CardDescription>
-          Данные из API: {apiEndpoint || 'не указан'}
+          Данные из API: {apiEndpoint || "не указан"}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <p className="text-muted-foreground">
-          Этот компонент может отображать динамические данные из вашего Laravel API
+          Этот компонент может отображать динамические данные из вашег�� Laravel API
         </p>
       </CardContent>
     </Card>
