@@ -1,44 +1,59 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { ExternalLink, Settings, Eye, Edit3, CheckCircle, AlertTriangle } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  ExternalLink,
+  Settings,
+  Eye,
+  Edit3,
+  CheckCircle,
+  AlertTriangle,
+} from "lucide-react";
+import { useState, useEffect } from "react";
 
 const BUILDER_API_KEY = import.meta.env.VITE_BUILDER_API_KEY;
 
 export default function BuilderAdminSafe() {
-  const [builderStatus, setBuilderStatus] = useState<'checking' | 'available' | 'error'>('checking');
+  const [builderStatus, setBuilderStatus] = useState<
+    "checking" | "available" | "error"
+  >("checking");
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const checkBuilderStatus = async () => {
       try {
         if (!BUILDER_API_KEY) {
-          throw new Error('API ключ не настроен');
+          throw new Error("API ключ не настроен");
         }
 
         // Попробуем импортировать Builder.io
-        await import('@builder.io/react');
-        setBuilderStatus('available');
+        await import("@builder.io/react");
+        setBuilderStatus("available");
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Неизвестная ошибка');
-        setBuilderStatus('error');
+        setError(err instanceof Error ? err.message : "Неизвестная ошибка");
+        setBuilderStatus("error");
       }
     };
 
     checkBuilderStatus();
   }, []);
 
-  const builderEditorUrl = BUILDER_API_KEY 
+  const builderEditorUrl = BUILDER_API_KEY
     ? `https://builder.io/content/${BUILDER_API_KEY}`
-    : 'https://builder.io/content';
+    : "https://builder.io/content";
 
   const openBuilder = () => {
-    window.open(builderEditorUrl, '_blank');
+    window.open(builderEditorUrl, "_blank");
   };
 
   const openPreview = () => {
-    window.open('/builder-preview/test', '_blank');
+    window.open("/builder-preview/test", "_blank");
   };
 
   return (
@@ -51,7 +66,7 @@ export default function BuilderAdminSafe() {
             Управление контентом через Builder.io
           </p>
         </div>
-        {builderStatus === 'available' && BUILDER_API_KEY && (
+        {builderStatus === "available" && BUILDER_API_KEY && (
           <Button onClick={openBuilder}>
             <ExternalLink className="w-4 h-4 mr-2" />
             Открыт�� Builder.io
@@ -85,19 +100,19 @@ export default function BuilderAdminSafe() {
               </Badge>
             )}
           </div>
-          
+
           <div className="flex items-center justify-between">
             <span>SDK Builder.io</span>
-            {builderStatus === 'checking' && (
+            {builderStatus === "checking" && (
               <Badge variant="secondary">Проверка...</Badge>
             )}
-            {builderStatus === 'available' && (
+            {builderStatus === "available" && (
               <Badge className="bg-green-100 text-green-800">
                 <CheckCircle className="w-3 h-3 mr-1" />
                 Доступен
               </Badge>
             )}
-            {builderStatus === 'error' && (
+            {builderStatus === "error" && (
               <Badge className="bg-red-100 text-red-800">
                 <AlertTriangle className="w-3 h-3 mr-1" />
                 Ошибка
@@ -107,10 +122,14 @@ export default function BuilderAdminSafe() {
 
           <div className="flex items-center justify-between">
             <span>Статус интеграции</span>
-            {builderStatus === 'available' && BUILDER_API_KEY ? (
-              <Badge className="bg-green-100 text-green-800">Готов к работе</Badge>
+            {builderStatus === "available" && BUILDER_API_KEY ? (
+              <Badge className="bg-green-100 text-green-800">
+                Готов к работе
+              </Badge>
             ) : (
-              <Badge className="bg-yellow-100 text-yellow-800">Требует настройки</Badge>
+              <Badge className="bg-yellow-100 text-yellow-800">
+                Требует настройки
+              </Badge>
             )}
           </div>
 
@@ -124,9 +143,7 @@ export default function BuilderAdminSafe() {
 
           {error && (
             <div className="pt-4 border-t">
-              <p className="text-sm text-destructive">
-                Ошибка: {error}
-              </p>
+              <p className="text-sm text-destructive">Ошибка: {error}</p>
             </div>
           )}
         </CardContent>
@@ -149,9 +166,9 @@ export default function BuilderAdminSafe() {
               Используйте визуальный редактор Builder.io для создания страниц
             </p>
             <div className="space-y-2">
-              <Button 
-                onClick={openBuilder} 
-                disabled={builderStatus !== 'available' || !BUILDER_API_KEY}
+              <Button
+                onClick={openBuilder}
+                disabled={builderStatus !== "available" || !BUILDER_API_KEY}
                 className="w-full"
               >
                 <ExternalLink className="w-4 h-4 mr-2" />
@@ -167,20 +184,18 @@ export default function BuilderAdminSafe() {
               <Eye className="h-5 w-5" />
               <span>Предварительный просмотр</span>
             </CardTitle>
-            <CardDescription>
-              Просматривайте созданные страницы
-            </CardDescription>
+            <CardDescription>Просматривайте созданные страницы</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-muted-foreground">
               Просмотр страниц Builder.io на вашем сайте
             </p>
             <div className="space-y-2">
-              <Button 
-                onClick={openPreview} 
+              <Button
+                onClick={openPreview}
                 variant="outline"
                 className="w-full"
-                disabled={builderStatus !== 'available'}
+                disabled={builderStatus !== "available"}
               >
                 <Eye className="w-4 h-4 mr-2" />
                 Предварительный просмотр
@@ -191,7 +206,7 @@ export default function BuilderAdminSafe() {
       </div>
 
       {/* Setup Instructions */}
-      {(!BUILDER_API_KEY || builderStatus === 'error') && (
+      {(!BUILDER_API_KEY || builderStatus === "error") && (
         <Card>
           <CardHeader>
             <CardTitle>Настройка Builder.io</CardTitle>
@@ -202,9 +217,9 @@ export default function BuilderAdminSafe() {
           <CardContent>
             <ol className="list-decimal list-inside space-y-2 text-sm">
               <li>
-                Зарегистрируйтесь на{' '}
-                <a 
-                  href="https://builder.io" 
+                Зарегистрируйтесь на{" "}
+                <a
+                  href="https://builder.io"
                   className="text-primary hover:underline"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -230,9 +245,7 @@ export default function BuilderAdminSafe() {
       <Card>
         <CardHeader>
           <CardTitle>Документация</CardTitle>
-          <CardDescription>
-            Полезные ссылки и ресурсы
-          </CardDescription>
+          <CardDescription>Полезные ссылки и ресурсы</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -240,12 +253,22 @@ export default function BuilderAdminSafe() {
               <h4 className="font-medium mb-2">Builder.io</h4>
               <ul className="text-sm space-y-1">
                 <li>
-                  <a href="https://builder.io/c/docs" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">
+                  <a
+                    href="https://builder.io/c/docs"
+                    className="text-primary hover:underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     Документация
                   </a>
                 </li>
                 <li>
-                  <a href="https://builder.io/content" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">
+                  <a
+                    href="https://builder.io/content"
+                    className="text-primary hover:underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     Панель управления
                   </a>
                 </li>

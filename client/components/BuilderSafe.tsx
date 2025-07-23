@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { LoadingSpinner } from "@/components/ui/loading-state";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, ExternalLink } from "lucide-react";
 
@@ -31,7 +37,7 @@ export function BuilderSafe({
 
         // Динамически импортируем Builder.io только когда нужно
         const { Builder, BuilderComponent } = await import("@builder.io/react");
-        
+
         Builder.init(BUILDER_API_KEY);
         setBuilderAvailable(true);
         setLoading(false);
@@ -70,29 +76,38 @@ export function BuilderSafe({
           <p className="text-sm text-muted-foreground">
             Причина: {error || "Неизвестная ошибка"}
           </p>
-          
+
           {!BUILDER_API_KEY && (
             <div className="p-4 bg-muted rounded-md">
               <h4 className="font-medium mb-2">Для настройки Builder.io:</h4>
               <ol className="list-decimal list-inside text-sm space-y-1">
-                <li>Получите API ключ на <a href="https://builder.io" className="text-primary hover:underline" target="_blank" rel="noopener noreferrer">builder.io</a></li>
+                <li>
+                  Получите API ключ на{" "}
+                  <a
+                    href="https://builder.io"
+                    className="text-primary hover:underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    builder.io
+                  </a>
+                </li>
                 <li>Добавьте его в фа��л .env.local</li>
                 <li>Перезапустите сервер</li>
               </ol>
             </div>
           )}
-          
+
           <div className="flex space-x-2">
-            <Button 
-              variant="outline" 
-              onClick={() => window.location.reload()}
-            >
+            <Button variant="outline" onClick={() => window.location.reload()}>
               Попробовать снова
             </Button>
             {BUILDER_API_KEY && (
-              <Button 
+              <Button
                 variant="outline"
-                onClick={() => window.open('https://builder.io/content', '_blank')}
+                onClick={() =>
+                  window.open("https://builder.io/content", "_blank")
+                }
               >
                 <ExternalLink className="w-4 h-4 mr-2" />
                 Открыть Builder.io
@@ -114,9 +129,11 @@ export function BuilderSafe({
       <p className="text-sm text-muted-foreground">
         Путь: {urlPath || path || window.location.pathname}
       </p>
-      <Button 
+      <Button
         className="mt-4"
-        onClick={() => window.open(`https://builder.io/content/${BUILDER_API_KEY}`, '_blank')}
+        onClick={() =>
+          window.open(`https://builder.io/content/${BUILDER_API_KEY}`, "_blank")
+        }
       >
         <ExternalLink className="w-4 h-4 mr-2" />
         Редактировать в Builder.io
