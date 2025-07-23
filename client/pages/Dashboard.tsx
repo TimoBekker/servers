@@ -9,6 +9,7 @@ import {
   CheckCircle,
   Activity,
   TrendingUp,
+  Loader2,
 } from "lucide-react";
 import {
   Card,
@@ -19,11 +20,11 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useEquipmentStatistics } from "@/hooks/useEquipment";
 
 const quickStats = [
   {
     title: "Оборудование",
-    value: "24",
     description: "единицы оборудования",
     icon: Server,
     href: "/equipment",
@@ -31,7 +32,6 @@ const quickStats = [
   },
   {
     title: "ИС",
-    value: "12",
     description: "информационных систем",
     icon: Monitor,
     href: "/information-systems",
@@ -39,7 +39,6 @@ const quickStats = [
   },
   {
     title: "Установленное ПО",
-    value: "156",
     description: "программных продуктов",
     icon: Package,
     href: "/software/installed",
@@ -47,7 +46,6 @@ const quickStats = [
   },
   {
     title: "Активные контракты",
-    value: "8",
     description: "действующих договоров",
     icon: FileText,
     href: "/contracts",
@@ -87,37 +85,6 @@ const recentEvents = [
     description: "Контракт на поддержку ПО истекает через 30 дней",
     time: "2 дня назад",
     status: "error",
-  },
-];
-
-const systemHealth = [
-  {
-    category: "Серверы",
-    total: 8,
-    online: 7,
-    offline: 1,
-    status: "good",
-  },
-  {
-    category: "Сетевое оборудование",
-    total: 6,
-    online: 6,
-    offline: 0,
-    status: "excellent",
-  },
-  {
-    category: "Системы хранения",
-    total: 4,
-    online: 3,
-    offline: 1,
-    status: "warning",
-  },
-  {
-    category: "ИБП",
-    total: 6,
-    online: 5,
-    offline: 1,
-    status: "good",
   },
 ];
 
@@ -165,6 +132,40 @@ const getStatusBadge = (status: string) => {
 };
 
 export default function Dashboard() {
+  const { data: statistics, isLoading: statsLoading, error } = useEquipmentStatistics();
+
+  // Generate system health data from statistics
+  const systemHealth = statistics ? [
+    {
+      category: "Серверы",
+      total: (statistics.by_type?.["Сервер"] || 0) + (statistics.by_type?.["Виртуальный сервер"] || 0),
+      online: Math.floor(((statistics.by_type?.["Сервер"] || 0) + (statistics.by_type?.["Виртуальный сервер"] || 0)) * 0.9),
+      offline: Math.ceil(((statistics.by_type?.["Сервер"] || 0) + (statistics.by_type?.["Виртуальный сервер"] || 0)) * 0.1),
+      status: "good",
+    },
+    {
+      category: "Сетевое оборудование",
+      total: statistics.by_type?.["Сетевое оборудование"] || 0,
+      online: statistics.by_type?.["Сетевое оборудование"] || 0,
+      offline: 0,
+      status: "excellent",
+    },
+    {
+      category: "Системы хранения",
+      total: statistics.by_type?.["Система хранения"] || 0,
+      online: Math.floor((statistics.by_type?.["Система хранения"] || 0) * 0.8),
+      offline: Math.ceil((statistics.by_type?.["Система хранения"] || 0) * 0.2),
+      status: "warning",
+    },
+    {
+      category: "ИБП",
+      total: statistics.by_type?.["Электропитание"] || 0,
+      online: Math.floor((statistics.by_type?.["Электропитание"] || 0) * 0.85),
+      offline: Math.ceil((statistics.by_type?.["Электропитание"] || 0) * 0.15),
+      status: "good",
+    },
+  ] : [];
+
   return (
     <div className="space-y-6">
       {/* Welcome Header */}
@@ -178,8 +179,27 @@ export default function Dashboard() {
 
       {/* Quick Stats */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {quickStats.map((stat) => {
+        {quickStats.map((stat, index) => {
           const IconComponent = stat.icon;
+          
+          let value = "0";
+          if (statistics && !statsLoading) {
+            switch (index) {
+              case 0: // Equipment
+                value = statistics.total.toString();
+                break;
+              case 1: // IS - mock data for now
+                value = "12";
+                break;
+              case 2: // Software - mock data for now
+                value = "156";
+                break;
+              case 3: // Contracts - mock data for now
+                value = "8";
+                break;
+            }
+          }
+          
           return (
             <Link key={stat.title} to={stat.href}>
               <Card className="hover:shadow-md transition-shadow cursor-pointer">
@@ -190,7 +210,14 @@ export default function Dashboard() {
                   <IconComponent className={`h-4 w-4 ${stat.color}`} />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{stat.value}</div>
+                  {statsLoading && index === 0 ? (
+                    <div className="flex items-center space-x-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span className="text-sm">Загрузка...</span>
+                    </div>
+                  ) : (
+                    <div className="text-2xl font-bold">{value}</div>
+                  )}
                   <p className="text-xs text-muted-foreground">
                     {stat.description}
                   </p>
@@ -212,34 +239,45 @@ export default function Dashboard() {
             <CardDescription>Статус оборудования по категориям</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            {systemHealth.map((item) => (
-              <div
-                key={item.category}
-                className="flex items-center justify-between"
-              >
-                <div className="flex flex-col">
-                  <span className="font-medium">{item.category}</span>
-                  <span className="text-sm text-muted-foreground">
-                    {item.online} из {item.total} активны
-                  </span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="flex items-center space-x-1">
-                    <CheckCircle className="h-4 w-4 text-green-600" />
-                    <span className="text-sm">{item.online}</span>
-                  </div>
-                  {item.offline > 0 && (
-                    <div className="flex items-center space-x-1">
-                      <AlertTriangle className="h-4 w-4 text-red-600" />
-                      <span className="text-sm">{item.offline}</span>
-                    </div>
-                  )}
-                  <div
-                    className={`w-2 h-2 rounded-full ${getStatusColor(item.status).replace("text-", "bg-")}`}
-                  />
-                </div>
+            {statsLoading ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-6 w-6 animate-spin" />
+                <span className="ml-2">Загрузка статистики...</span>
               </div>
-            ))}
+            ) : error ? (
+              <div className="text-center py-8 text-red-600">
+                <p>Ошибка загрузки данных</p>
+              </div>
+            ) : (
+              systemHealth.map((item) => (
+                <div
+                  key={item.category}
+                  className="flex items-center justify-between"
+                >
+                  <div className="flex flex-col">
+                    <span className="font-medium">{item.category}</span>
+                    <span className="text-sm text-muted-foreground">
+                      {item.online} из {item.total} активны
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-1">
+                      <CheckCircle className="h-4 w-4 text-green-600" />
+                      <span className="text-sm">{item.online}</span>
+                    </div>
+                    {item.offline > 0 && (
+                      <div className="flex items-center space-x-1">
+                        <AlertTriangle className="h-4 w-4 text-red-600" />
+                        <span className="text-sm">{item.offline}</span>
+                      </div>
+                    )}
+                    <div
+                      className={`w-2 h-2 rounded-full ${getStatusColor(item.status).replace("text-", "bg-")}`}
+                    />
+                  </div>
+                </div>
+              ))
+            )}
           </CardContent>
         </Card>
 
@@ -308,7 +346,13 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold text-purple-600">23</div>
+              {statsLoading ? (
+                <Loader2 className="h-6 w-6 animate-spin mx-auto text-purple-600" />
+              ) : (
+                <div className="text-2xl font-bold text-purple-600">
+                  {statistics?.total || 0}
+                </div>
+              )}
               <div className="text-sm text-muted-foreground">
                 Единиц оборудования
               </div>

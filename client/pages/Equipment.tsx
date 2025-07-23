@@ -4,10 +4,12 @@ import {
   Filter,
   MoreHorizontal,
   ExternalLink,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import {
   Table,
   TableBody,
@@ -24,46 +26,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-
-// Sample equipment data
-const equipment = [
-  {
-    id: "SRV-001",
-    name: "Сервер DB-01",
-    type: "Сервер",
-    status: "в работе",
-    location: "Стойка A1",
-    specs: "Intel Xeon, 64GB RAM, 2TB SSD",
-    responsible: "Иванов И.И.",
-  },
-  {
-    id: "SW-001",
-    name: "Коммутатор Core-01",
-    type: "Сетевое оборудование",
-    status: "в работе",
-    location: "Стойка A2",
-    specs: "48 портов Gigabit, 4x 10GB SFP+",
-    responsible: "Петров П.П.",
-  },
-  {
-    id: "UPS-001",
-    name: "ИБП Rack-01",
-    type: "Электропитание",
-    status: "выключено / не в работе",
-    location: "Стойка A1",
-    specs: "3000VA, Online, 8 розеток",
-    responsible: "Сидоров С.С.",
-  },
-  {
-    id: "SRV-002",
-    name: "Сервер Legacy-01",
-    type: "Сервер",
-    status: "выведено из эксплуатации",
-    location: "Склад",
-    specs: "Intel Pentium 4, 4GB RAM, 500GB HDD",
-    responsible: "Архивариус А.А.",
-  },
-];
+import { useEquipment, useEquipmentStatistics } from "@/hooks/useEquipment";
+import { Equipment as EquipmentType } from "@/lib/api";
 
 const getStatusBadge = (status: string) => {
   switch (status) {
@@ -97,6 +61,44 @@ const getStatusBadge = (status: string) => {
 };
 
 export default function Equipment() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  
+  const { data: equipmentData, isLoading, error } = useEquipment({
+    page: currentPage,
+    per_page: 15,
+    search: searchTerm || undefined,
+  });
+  
+  const { data: statistics, isLoading: statsLoading } = useEquipmentStatistics();
+
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(1); // Reset to first page when searching
+  };
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold">Оборудование</h1>
+            <p className="text-muted-foreground">
+              Управление серверным и сетевым оборудованием
+            </p>
+          </div>
+        </div>
+        <Card>
+          <CardContent className="p-6">
+            <div className="text-center text-red-600">
+              <p>Ошибка загрузки данных. Проверьте подключение к серверу.</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -122,10 +124,19 @@ export default function Equipment() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">24</div>
-            <p className="text-xs text-muted-foreground">
-              +2 за последний месяц
-            </p>
+            {statsLoading ? (
+              <div className="flex items-center space-x-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span className="text-sm">Загрузка...</span>
+              </div>
+            ) : (
+              <>
+                <div className="text-2xl font-bold">{statistics?.total || 0}</div>
+                <p className="text-xs text-muted-foreground">
+                  единиц оборудования
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
         <Card>
@@ -133,8 +144,23 @@ export default function Equipment() {
             <CardTitle className="text-sm font-medium">В работе</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">22</div>
-            <p className="text-xs text-muted-foreground">91.7% от общего</p>
+            {statsLoading ? (
+              <div className="flex items-center space-x-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span className="text-sm">Загрузка...</span>
+              </div>
+            ) : (
+              <>
+                <div className="text-2xl font-bold">
+                  {statistics?.by_status?.["в работе"] || 0}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {statistics?.total 
+                    ? Math.round(((statistics.by_status?.["в работе"] || 0) / statistics.total) * 100)
+                    : 0}% от общего
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
         <Card>
@@ -142,8 +168,23 @@ export default function Equipment() {
             <CardTitle className="text-sm font-medium">Выключено</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">1</div>
-            <p className="text-xs text-muted-foreground">4.2% от общего</p>
+            {statsLoading ? (
+              <div className="flex items-center space-x-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span className="text-sm">Загрузка...</span>
+              </div>
+            ) : (
+              <>
+                <div className="text-2xl font-bold">
+                  {statistics?.by_status?.["выключено / не в работе"] || 0}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {statistics?.total 
+                    ? Math.round(((statistics.by_status?.["выключено / не в работе"] || 0) / statistics.total) * 100)
+                    : 0}% от общего
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
         <Card>
@@ -153,8 +194,23 @@ export default function Equipment() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">1</div>
-            <p className="text-xs text-muted-foreground">4.2% от общего</p>
+            {statsLoading ? (
+              <div className="flex items-center space-x-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span className="text-sm">Загрузка...</span>
+              </div>
+            ) : (
+              <>
+                <div className="text-2xl font-bold">
+                  {statistics?.by_status?.["выведено из эксплуатации"] || 0}
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {statistics?.total 
+                    ? Math.round(((statistics.by_status?.["выведено из эксплуатации"] || 0) / statistics.total) * 100)
+                    : 0}% от общего
+                </p>
+              </>
+            )}
           </CardContent>
         </Card>
       </div>
@@ -171,7 +227,12 @@ export default function Equipment() {
           <div className="flex items-center space-x-2 mb-4">
             <div className="relative flex-1">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Поиск оборудования..." className="pl-8" />
+              <Input 
+                placeholder="Поиск оборудования..." 
+                className="pl-8"
+                value={searchTerm}
+                onChange={(e) => handleSearch(e.target.value)}
+              />
             </div>
             <Button variant="outline">
               <Filter className="w-4 h-4 mr-2" />
@@ -179,54 +240,108 @@ export default function Equipment() {
             </Button>
           </div>
 
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>ID</TableHead>
-                <TableHead>Название</TableHead>
-                <TableHead>Тип</TableHead>
-                <TableHead>Статус</TableHead>
-                <TableHead>Расположение</TableHead>
-                <TableHead>Характеристики</TableHead>
-                <TableHead>Ответственный</TableHead>
-                <TableHead className="w-[70px]"></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {equipment.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell className="font-medium">{item.id}</TableCell>
-                  <TableCell>
-                    <Link
-                      to={`/equipment/${item.id}`}
-                      className="text-primary hover:underline font-medium"
-                    >
-                      {item.name}
-                    </Link>
-                  </TableCell>
-                  <TableCell>{item.type}</TableCell>
-                  <TableCell>{getStatusBadge(item.status)}</TableCell>
-                  <TableCell>{item.location}</TableCell>
-                  <TableCell className="max-w-xs truncate">
-                    {item.specs}
-                  </TableCell>
-                  <TableCell>{item.responsible}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center space-x-1">
-                      <Button variant="ghost" size="sm" asChild>
-                        <Link to={`/equipment/${item.id}`}>
-                          <ExternalLink className="w-4 h-4" />
-                        </Link>
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <MoreHorizontal className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
+          {isLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="h-8 w-8 animate-spin" />
+              <span className="ml-2">Загрузка оборудования...</span>
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>ID</TableHead>
+                  <TableHead>Название</TableHead>
+                  <TableHead>Тип</TableHead>
+                  <TableHead>Статус</TableHead>
+                  <TableHead>Расположение</TableHead>
+                  <TableHead>Характеристики</TableHead>
+                  <TableHead>Ответственные</TableHead>
+                  <TableHead className="w-[70px]"></TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {equipmentData?.data?.map((item: EquipmentType) => (
+                  <TableRow key={item.equipment_id}>
+                    <TableCell className="font-medium">{item.equipment_id}</TableCell>
+                    <TableCell>
+                      <Link
+                        to={`/equipment/${item.equipment_id}`}
+                        className="text-primary hover:underline font-medium"
+                      >
+                        {item.name}
+                      </Link>
+                    </TableCell>
+                    <TableCell>{item.type}</TableCell>
+                    <TableCell>{getStatusBadge(item.status)}</TableCell>
+                    <TableCell>{item.location || 'Не указано'}</TableCell>
+                    <TableCell className="max-w-xs truncate">
+                      {item.specifications || 'Не указано'}
+                    </TableCell>
+                    <TableCell>
+                      {item.responsible_persons?.length > 0 
+                        ? item.responsible_persons[0].name
+                        : 'Не назначен'
+                      }
+                      {item.responsible_persons?.length > 1 && (
+                        <span className="text-muted-foreground">
+                          {' '}и еще {item.responsible_persons.length - 1}
+                        </span>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center space-x-1">
+                        <Button variant="ghost" size="sm" asChild>
+                          <Link to={`/equipment/${item.equipment_id}`}>
+                            <ExternalLink className="w-4 h-4" />
+                          </Link>
+                        </Button>
+                        <Button variant="ghost" size="sm">
+                          <MoreHorizontal className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {equipmentData?.data?.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                      {searchTerm ? 'Оборудование не найдено' : 'Нет оборудования'}
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          )}
+
+          {/* Pagination */}
+          {equipmentData && equipmentData.last_page > 1 && (
+            <div className="flex items-center justify-between mt-4">
+              <div className="text-sm text-muted-foreground">
+                Показано {equipmentData.from}-{equipmentData.to} из {equipmentData.total} записей
+              </div>
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  Предыдущая
+                </Button>
+                <span className="text-sm">
+                  Страница {currentPage} из {equipmentData.last_page}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                  disabled={currentPage === equipmentData.last_page}
+                >
+                  Следующая
+                </Button>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

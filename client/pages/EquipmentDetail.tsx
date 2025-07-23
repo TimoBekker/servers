@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Eye, EyeOff, Copy, Edit } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, Copy, Edit, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,99 +11,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
-
-// Sample detailed equipment data
-const equipmentData: { [key: string]: any } = {
-  "SRV-001": {
-    id: "SRV-001",
-    name: "Сервер DB-01",
-    vmwareName: "SMEV3-GIS-APP-03-T",
-    hostname: "smev3-node1",
-    status: "выключено / не в работе",
-    type: "Виртуальный сервер",
-    parentEquipment: "vc7cloud.guso.loc",
-    description: "Узел 1 тестового СМЭВ 3.0 отключено 21.09.2023",
-    ipAddresses: [
-      {
-        ip: "10.0.87.218",
-        mask: "/23 (255.255.254.0)",
-        vlan: "979 (Серверы РЦУП (Самара))",
-        dns: "SMEV3-APP03T.tech.samregion.ru",
-      },
-      {
-        ip: "10.100.10.250",
-        mask: "/27 (255.255.255.224)",
-        vlan: "2241vlan_SMEV3_10.100-TEST (/27)",
-        dns: "",
-      },
-    ],
-    responsible: [
-      {
-        organization: "Цифровой регион",
-        name: "Кравченко Максим",
-        company: "IT-Universe",
-        role: "Ответственный за консультирование и ведение проекта",
-        email: "kravchenko.m@it-universe.ru",
-        phone: "+7 846 979 8080, +7 960 813 4440",
-      },
-      {
-        organization: "Цифровой регион",
-        name: "Белов Никита",
-        company: "Цифровой регион",
-        role: "Ответственный за администрирование ОС и ПО",
-        email: "n.belov@rcu.samregion.ru",
-        phone: "903",
-      },
-      {
-        organization: "Цифровой регион",
-        name: "Мальцев Андрей",
-        company: "Цифровой регион",
-        role: "Ответственный за администрирование ОС и ПО",
-        email: "a.maltsev@digitalreg.ru",
-        phone: "901",
-      },
-    ],
-    characteristics: {
-      vmwareLevel: "4 x 1",
-      totalVirtualCpu: "4",
-      ram: "16Gb (16384 Mb)",
-      storage: [
-        { name: "HDD1", size: "50 Gb" },
-        { name: "HDD2", size: "10 Gb" },
-      ],
-    },
-    software: ["Apache Tomcat 8"],
-    informationSystems: ['Тестовый контур ГИС СО "СМЭВ"'],
-    documentation: "не задано",
-    equipmentStatus: {
-      backup: "нет",
-      lastBackupDate: "не задано",
-      commissionedDate: "09.02.2016",
-      decommissionedDate: "не задано",
-    },
-    relatedTickets: "не задано",
-    securityParams: {
-      kspdAccess: "есть",
-      internetAccess: "есть",
-      arcsightConnection: "нет",
-      remoteAccess: "не задано",
-      internetForwarding: "не задано",
-      listeningPorts: "не задано",
-    },
-    passwords: [
-      {
-        username: "devel",
-        password: "***hidden***",
-        description: "Описание не задано",
-      },
-      {
-        username: "root",
-        password: "***hidden***",
-        description: "m.iseckiy",
-      },
-    ],
-  },
-};
+import { useEquipmentDetail } from "@/hooks/useEquipment";
+import { toast } from "@/hooks/use-toast";
 
 const getStatusBadge = (status: string) => {
   switch (status) {
@@ -142,7 +51,65 @@ export default function EquipmentDetail() {
     [key: string]: boolean;
   }>({});
 
-  if (!id || !equipmentData[id]) {
+  const { data: equipment, isLoading, error } = useEquipmentDetail(id || '');
+
+  const togglePasswordVisibility = (index: number) => {
+    setVisiblePasswords((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      toast({
+        title: "Скопировано",
+        description: "Пароль скопирован в буфер обмена",
+      });
+    });
+  };
+
+  if (!id) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center space-x-4">
+          <Button variant="outline" size="sm" asChild>
+            <Link to="/equipment">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Назад к списку
+            </Link>
+          </Button>
+        </div>
+        <div className="text-center py-12">
+          <h2 className="text-2xl font-bold mb-2">ID оборудования не указан</h2>
+          <p className="text-muted-foreground">
+            Необходимо указать ID оборудования
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center space-x-4">
+          <Button variant="outline" size="sm" asChild>
+            <Link to="/equipment">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Назад к списку
+            </Link>
+          </Button>
+        </div>
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin" />
+          <span className="ml-2">Загрузка данных оборудования...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !equipment) {
     return (
       <div className="space-y-6">
         <div className="flex items-center space-x-4">
@@ -156,24 +123,16 @@ export default function EquipmentDetail() {
         <div className="text-center py-12">
           <h2 className="text-2xl font-bold mb-2">Оборудование не найдено</h2>
           <p className="text-muted-foreground">
-            Запрошенное оборудование не существует
+            Запрошенное оборудование не существует или произошла ошибка загрузки
           </p>
         </div>
       </div>
     );
   }
 
-  const equipment = equipmentData[id];
-
-  const togglePasswordVisibility = (index: number) => {
-    setVisiblePasswords((prev) => ({
-      ...prev,
-      [index]: !prev[index],
-    }));
-  };
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return 'не задано';
+    return new Date(dateString).toLocaleDateString('ru-RU');
   };
 
   return (
@@ -190,7 +149,7 @@ export default function EquipmentDetail() {
           <div>
             <h1 className="text-3xl font-bold">{equipment.name}</h1>
             <p className="text-muted-foreground">
-              {equipment.vmwareName} • {equipment.hostname}
+              {equipment.vmware_name || 'VMware имя не указано'} • {equipment.hostname || 'Hostname не указан'}
             </p>
           </div>
         </div>
@@ -215,13 +174,13 @@ export default function EquipmentDetail() {
                 <label className="text-sm font-medium text-muted-foreground">
                   VMware-имя
                 </label>
-                <p className="font-medium">{equipment.vmwareName}</p>
+                <p className="font-medium">{equipment.vmware_name || 'не указано'}</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-muted-foreground">
                   Hostname
                 </label>
-                <p className="font-medium">{equipment.hostname}</p>
+                <p className="font-medium">{equipment.hostname || 'не указано'}</p>
               </div>
               <div>
                 <label className="text-sm font-medium text-muted-foreground">
@@ -240,13 +199,13 @@ export default function EquipmentDetail() {
               <label className="text-sm font-medium text-muted-foreground">
                 Родительское оборудование
               </label>
-              <p className="font-medium">{equipment.parentEquipment}</p>
+              <p className="font-medium">{equipment.parent_equipment || 'не указано'}</p>
             </div>
             <div>
               <label className="text-sm font-medium text-muted-foreground">
                 Описание
               </label>
-              <p className="font-medium">{equipment.description}</p>
+              <p className="font-medium">{equipment.description || 'не указано'}</p>
             </div>
           </CardContent>
         </Card>
@@ -263,7 +222,7 @@ export default function EquipmentDetail() {
                   Уровень VMware
                 </label>
                 <p className="font-medium">
-                  {equipment.characteristics.vmwareLevel}
+                  {equipment.vmware_level || 'не указано'}
                 </p>
               </div>
               <div>
@@ -271,7 +230,7 @@ export default function EquipmentDetail() {
                   Виртуальных процессоров
                 </label>
                 <p className="font-medium">
-                  {equipment.characteristics.totalVirtualCpu}
+                  {equipment.virtual_cpu || 'не указано'}
                 </p>
               </div>
             </div>
@@ -279,65 +238,67 @@ export default function EquipmentDetail() {
               <label className="text-sm font-medium text-muted-foreground">
                 ОЗУ
               </label>
-              <p className="font-medium">{equipment.characteristics.ram}</p>
+              <p className="font-medium">{equipment.ram || 'не указано'}</p>
             </div>
-            <div>
-              <label className="text-sm font-medium text-muted-foreground">
-                Хранилище
-              </label>
-              <div className="space-y-1">
-                {equipment.characteristics.storage.map(
-                  (storage: any, index: number) => (
+            {equipment.storage && equipment.storage.length > 0 && (
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">
+                  Хранилище
+                </label>
+                <div className="space-y-1">
+                  {equipment.storage.map((storage, index) => (
                     <p key={index} className="font-medium">
                       {storage.name}: {storage.size}
                     </p>
-                  ),
-                )}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </CardContent>
         </Card>
 
         {/* IP Addresses */}
-        <Card>
-          <CardHeader>
-            <CardTitle>IP-адреса, DNS-имена</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {equipment.ipAddresses.map((addr: any, index: number) => (
-              <div key={index} className="p-4 border rounded-lg space-y-2">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium text-muted-foreground">
-                      IP
-                    </label>
-                    <p className="font-medium">{addr.ip}</p>
+        {equipment.ip_addresses && equipment.ip_addresses.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle>IP-адреса, DNS-имена</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {equipment.ip_addresses.map((addr, index) => (
+                <div key={index} className="p-4 border rounded-lg space-y-2">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium text-muted-foreground">
+                        IP
+                      </label>
+                      <p className="font-medium">{addr.ip_address}</p>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-muted-foreground">
+                        Маска
+                      </label>
+                      <p className="font-medium">{addr.subnet_mask}</p>
+                    </div>
                   </div>
                   <div>
                     <label className="text-sm font-medium text-muted-foreground">
-                      Маска
+                      VLAN
                     </label>
-                    <p className="font-medium">{addr.mask}</p>
+                    <p className="font-medium">{addr.vlan}</p>
                   </div>
+                  {addr.dns_name && (
+                    <div>
+                      <label className="text-sm font-medium text-muted-foreground">
+                        DNS
+                      </label>
+                      <p className="font-medium">{addr.dns_name}</p>
+                    </div>
+                  )}
                 </div>
-                <div>
-                  <label className="text-sm font-medium text-muted-foreground">
-                    VLAN
-                  </label>
-                  <p className="font-medium">{addr.vlan}</p>
-                </div>
-                {addr.dns && (
-                  <div>
-                    <label className="text-sm font-medium text-muted-foreground">
-                      DNS
-                    </label>
-                    <p className="font-medium">{addr.dns}</p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+              ))}
+            </CardContent>
+          </Card>
+        )}
 
         {/* Software & IS */}
         <Card>
@@ -345,74 +306,78 @@ export default function EquipmentDetail() {
             <CardTitle>ПО и ИС</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div>
-              <label className="text-sm font-medium text-muted-foreground">
-                Программное обеспечение
-              </label>
-              <div className="mt-2 space-y-1">
-                {equipment.software.map((sw: string, index: number) => (
-                  <p key={index} className="font-medium">
-                    {sw}
-                  </p>
-                ))}
-              </div>
-            </div>
-            <Separator />
-            <div>
-              <label className="text-sm font-medium text-muted-foreground">
-                Информационные системы
-              </label>
-              <div className="mt-2 space-y-1">
-                {equipment.informationSystems.map(
-                  (sys: string, index: number) => (
+            {equipment.software && equipment.software.length > 0 && (
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">
+                  Программное обеспечение
+                </label>
+                <div className="mt-2 space-y-1">
+                  {equipment.software.map((sw, index) => (
                     <p key={index} className="font-medium">
-                      {sys}
+                      {sw.name} {sw.version && `v${sw.version}`}
                     </p>
-                  ),
-                )}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
+            <Separator />
+            {equipment.information_systems && equipment.information_systems.length > 0 && (
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">
+                  Информационные системы
+                </label>
+                <div className="mt-2 space-y-1">
+                  {equipment.information_systems.map((sys, index) => (
+                    <p key={index} className="font-medium">
+                      {sys.name}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 
         {/* Responsible People */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Ответственные</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {equipment.responsible.map((person: any, index: number) => (
-                <div key={index} className="p-4 border rounded-lg space-y-2">
-                  <div>
-                    <p className="font-semibold">{person.name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      ({person.company})
-                    </p>
+        {equipment.responsible_persons && equipment.responsible_persons.length > 0 && (
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle>Ответственные</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {equipment.responsible_persons.map((person, index) => (
+                  <div key={index} className="p-4 border rounded-lg space-y-2">
+                    <div>
+                      <p className="font-semibold">{person.name}</p>
+                      <p className="text-sm text-muted-foreground">
+                        ({person.company})
+                      </p>
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground">
+                        Роль
+                      </label>
+                      <p className="text-sm">{person.role}</p>
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground">
+                        Email
+                      </label>
+                      <p className="text-sm font-mono">{person.email}</p>
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-muted-foreground">
+                        Телефон
+                      </label>
+                      <p className="text-sm">{person.phone}</p>
+                    </div>
                   </div>
-                  <div>
-                    <label className="text-xs font-medium text-muted-foreground">
-                      Роль
-                    </label>
-                    <p className="text-sm">{person.role}</p>
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-muted-foreground">
-                      Email
-                    </label>
-                    <p className="text-sm font-mono">{person.email}</p>
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-muted-foreground">
-                      Телефон
-                    </label>
-                    <p className="text-sm">{person.phone}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Equipment Status */}
         <Card>
@@ -426,7 +391,7 @@ export default function EquipmentDetail() {
                   Резервное копирование
                 </label>
                 <p className="font-medium">
-                  {equipment.equipmentStatus.backup}
+                  {equipment.has_backup ? 'есть' : 'нет'}
                 </p>
               </div>
               <div>
@@ -434,7 +399,7 @@ export default function EquipmentDetail() {
                   Последний бекап
                 </label>
                 <p className="font-medium">
-                  {equipment.equipmentStatus.lastBackupDate}
+                  {formatDate(equipment.last_backup_date)}
                 </p>
               </div>
               <div>
@@ -442,7 +407,7 @@ export default function EquipmentDetail() {
                   Введено в эксплуатацию
                 </label>
                 <p className="font-medium">
-                  {equipment.equipmentStatus.commissionedDate}
+                  {formatDate(equipment.commissioned_date)}
                 </p>
               </div>
               <div>
@@ -450,7 +415,7 @@ export default function EquipmentDetail() {
                   Выведено из эксплуатации
                 </label>
                 <p className="font-medium">
-                  {equipment.equipmentStatus.decommissionedDate}
+                  {formatDate(equipment.decommissioned_date)}
                 </p>
               </div>
             </div>
@@ -469,7 +434,7 @@ export default function EquipmentDetail() {
                   Доступ в КСПД
                 </label>
                 <p className="font-medium">
-                  {equipment.securityParams.kspdAccess}
+                  {equipment.kspd_access ? 'есть' : 'нет'}
                 </p>
               </div>
               <div>
@@ -477,7 +442,7 @@ export default function EquipmentDetail() {
                   Доступ в Интернет
                 </label>
                 <p className="font-medium">
-                  {equipment.securityParams.internetAccess}
+                  {equipment.internet_access ? 'есть' : 'нет'}
                 </p>
               </div>
               <div>
@@ -485,7 +450,7 @@ export default function EquipmentDetail() {
                   Соединение с Arcsight
                 </label>
                 <p className="font-medium">
-                  {equipment.securityParams.arcsightConnection}
+                  {equipment.arcsight_connection ? 'есть' : 'нет'}
                 </p>
               </div>
               <div>
@@ -493,7 +458,7 @@ export default function EquipmentDetail() {
                   Удаленный доступ
                 </label>
                 <p className="font-medium">
-                  {equipment.securityParams.remoteAccess}
+                  {equipment.remote_access || 'не задано'}
                 </p>
               </div>
               <div>
@@ -501,7 +466,7 @@ export default function EquipmentDetail() {
                   Проброс в интернет
                 </label>
                 <p className="font-medium">
-                  {equipment.securityParams.internetForwarding}
+                  {equipment.internet_forwarding || 'не задано'}
                 </p>
               </div>
               <div>
@@ -509,7 +474,7 @@ export default function EquipmentDetail() {
                   Прослушиваемые порты
                 </label>
                 <p className="font-medium">
-                  {equipment.securityParams.listeningPorts}
+                  {equipment.listening_ports || 'не задано'}
                 </p>
               </div>
             </div>
@@ -517,51 +482,53 @@ export default function EquipmentDetail() {
         </Card>
 
         {/* Passwords */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Пароли</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {equipment.passwords.map((pwd: any, index: number) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between p-4 border rounded-lg"
-                >
-                  <div className="space-y-1">
-                    <p className="font-medium">{pwd.username}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {pwd.description}
-                    </p>
+        {equipment.passwords && equipment.passwords.length > 0 && (
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle>Пароли</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {equipment.passwords.map((pwd, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-4 border rounded-lg"
+                  >
+                    <div className="space-y-1">
+                      <p className="font-medium">{pwd.username}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {pwd.description || 'Описание не задано'}
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <code className="px-2 py-1 bg-muted rounded text-sm">
+                        {visiblePasswords[index] ? pwd.password : "••••••••"}
+                      </code>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => togglePasswordVisibility(index)}
+                      >
+                        {visiblePasswords[index] ? (
+                          <EyeOff className="w-4 h-4" />
+                        ) : (
+                          <Eye className="w-4 h-4" />
+                        )}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => copyToClipboard(pwd.password)}
+                      >
+                        <Copy className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-2">
-                    <code className="px-2 py-1 bg-muted rounded text-sm">
-                      {visiblePasswords[index] ? pwd.password : "••••••••"}
-                    </code>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => togglePasswordVisibility(index)}
-                    >
-                      {visiblePasswords[index] ? (
-                        <EyeOff className="w-4 h-4" />
-                      ) : (
-                        <Eye className="w-4 h-4" />
-                      )}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => copyToClipboard(pwd.password)}
-                    >
-                      <Copy className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );
