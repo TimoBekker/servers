@@ -1,6 +1,9 @@
 // API service for Laravel backend
 
-const API_BASE_URL = process.env.VITE_API_URL || 'http://192.168.126.143:8000/api';
+// Use proxy in development, direct URL in production
+const API_BASE_URL = import.meta.env.DEV
+  ? '/laravel-api'
+  : (import.meta.env.VITE_API_URL || 'http://192.168.126.143:8000/api');
 
 class ApiService {
   private baseUrl: string;
