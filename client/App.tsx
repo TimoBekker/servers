@@ -62,10 +62,8 @@ const App = () => (
             <Route path="/reports/licenses" element={<ReportsLicenses />} />
             <Route path="/api-test" element={<ApiTest />} />
             <Route path="/test" element={<Test />} />
-            {/* Временно закомментируем Builder.io маршруты
-            <Route path="/builder-admin" element={<BuilderAdmin />} />
-            <Route path="/builder-preview/*" element={<BuilderPageRoute />} />
-            */}
+            <Route path="/builder-admin" element={<BuilderAdminSafe />} />
+            <Route path="/builder-preview/*" element={<BuilderPageSafe />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
