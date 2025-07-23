@@ -63,6 +63,7 @@ const App = () => (
             <Route path="/api-test" element={<ApiTest />} />
             <Route path="/builder-admin" element={<BuilderAdmin />} />
             <Route path="/builder-preview/*" element={<BuilderPageRoute />} />
+            <Route path="/test" element={<Test />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
