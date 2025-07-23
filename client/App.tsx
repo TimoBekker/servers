@@ -60,6 +60,8 @@ const App = () => (
             <Route path="/reports/resources" element={<ReportsResources />} />
             <Route path="/reports/licenses" element={<ReportsLicenses />} />
             <Route path="/api-test" element={<ApiTest />} />
+            <Route path="/builder-admin" element={<BuilderAdmin />} />
+            <Route path="/builder-preview/*" element={<BuilderPageRoute />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
