@@ -1,4 +1,4 @@
-import { builder, BuilderComponent, useIsPreviewing } from "@builder.io/react";
+import { Builder, BuilderComponent, builder } from "@builder.io/react";
 import { registerBuilderComponents } from "@/components/builder";
 import { useEffect, useState } from "react";
 import { LoadingSpinner } from "@/components/ui/loading-state";
@@ -6,10 +6,15 @@ import { LoadingSpinner } from "@/components/ui/loading-state";
 // Инициализация Builder.io
 const BUILDER_API_KEY = import.meta.env.VITE_BUILDER_API_KEY;
 
+let componentsRegistered = false;
+
 if (BUILDER_API_KEY) {
-  builder.init(BUILDER_API_KEY);
-  // Регистрируем компоненты
-  registerBuilderComponents();
+  Builder.init(BUILDER_API_KEY);
+  // Регистрируем компоненты только один раз
+  if (!componentsRegistered) {
+    registerBuilderComponents();
+    componentsRegistered = true;
+  }
 } else {
   console.warn(
     "Builder.io API key is missing. Please add VITE_BUILDER_API_KEY to your .env.local file",
@@ -30,7 +35,6 @@ export function BuilderPage({
   const [builderContent, setBuilderContent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const isPreviewing = useIsPreviewing();
 
   useEffect(() => {
     if (!BUILDER_API_KEY) {
@@ -81,7 +85,7 @@ export function BuilderPage({
             <p>Для работы с Builder.io необходимо:</p>
             <ol className="list-decimal list-inside mt-2 space-y-1">
               <li>
-                Зарегистрироваться н��{" "}
+                Зарегистрироваться на{" "}
                 <a
                   href="https://builder.io"
                   className="text-primary hover:underline"
@@ -100,7 +104,7 @@ export function BuilderPage({
     );
   }
 
-  if (!builderContent && !isPreviewing) {
+  if (!builderContent) {
     return (
       <div className="text-center py-12">
         <h2 className="text-xl font-semibold mb-2">Страница не найдена</h2>
