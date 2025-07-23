@@ -1,21 +1,27 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { ExternalLink, Settings, Eye, Edit3 } from 'lucide-react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ExternalLink, Settings, Eye, Edit3 } from "lucide-react";
 
 const BUILDER_API_KEY = import.meta.env.VITE_BUILDER_API_KEY;
 
 export default function BuilderAdmin() {
-  const builderEditorUrl = BUILDER_API_KEY 
+  const builderEditorUrl = BUILDER_API_KEY
     ? `https://builder.io/content/${BUILDER_API_KEY}`
-    : 'https://builder.io/content';
+    : "https://builder.io/content";
 
   const openBuilder = () => {
-    window.open(builderEditorUrl, '_blank');
+    window.open(builderEditorUrl, "_blank");
   };
 
   const openPreview = () => {
-    window.open('/builder-preview', '_blank');
+    window.open("/builder-preview", "_blank");
   };
 
   return (
@@ -56,7 +62,7 @@ export default function BuilderAdmin() {
               <Badge className="bg-red-100 text-red-800">Не настроен</Badge>
             )}
           </div>
-          
+
           <div className="flex items-center justify-between">
             <span>SDK установлен</span>
             <Badge className="bg-green-100 text-green-800">Да</Badge>
@@ -67,7 +73,9 @@ export default function BuilderAdmin() {
             {BUILDER_API_KEY ? (
               <Badge className="bg-green-100 text-green-800">Да</Badge>
             ) : (
-              <Badge className="bg-yellow-100 text-yellow-800">Ожидание ключа</Badge>
+              <Badge className="bg-yellow-100 text-yellow-800">
+                Ожидание ключа
+              </Badge>
             )}
           </div>
 
@@ -98,8 +106,8 @@ export default function BuilderAdmin() {
               Используйте визуальный редактор Builder.io для создания страниц
             </p>
             <div className="space-y-2">
-              <Button 
-                onClick={openBuilder} 
+              <Button
+                onClick={openBuilder}
                 disabled={!BUILDER_API_KEY}
                 className="w-full"
               >
@@ -116,17 +124,15 @@ export default function BuilderAdmin() {
               <Eye className="h-5 w-5" />
               <span>Предварительный просмотр</span>
             </CardTitle>
-            <CardDescription>
-              Просматривайте созданные страницы
-            </CardDescription>
+            <CardDescription>Просматривайте созданные страницы</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-muted-foreground">
               Просмотр страниц Builder.io на вашем сайте
             </p>
             <div className="space-y-2">
-              <Button 
-                onClick={openPreview} 
+              <Button
+                onClick={openPreview}
                 variant="outline"
                 className="w-full"
               >
@@ -150,9 +156,9 @@ export default function BuilderAdmin() {
           <CardContent>
             <ol className="list-decimal list-inside space-y-2 text-sm">
               <li>
-                Зарегистрируйтесь на{' '}
-                <a 
-                  href="https://builder.io" 
+                Зарегистрируйтесь на{" "}
+                <a
+                  href="https://builder.io"
                   className="text-primary hover:underline"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -184,7 +190,16 @@ export default function BuilderAdmin() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            {['Card', 'CardHeader', 'CardTitle', 'CardDescription', 'CardContent', 'Button', 'Badge', 'StatsDisplay'].map((component) => (
+            {[
+              "Card",
+              "CardHeader",
+              "CardTitle",
+              "CardDescription",
+              "CardContent",
+              "Button",
+              "Badge",
+              "StatsDisplay",
+            ].map((component) => (
               <Badge key={component} variant="outline">
                 {component}
               </Badge>

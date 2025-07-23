@@ -1,60 +1,90 @@
-import { builder } from '@builder.io/react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { builder } from "@builder.io/react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 // Обертки для компонентов с текстом
-export const CardTitleWrapper = ({ text, className, ...props }: { text?: string; className?: string }) => (
+export const CardTitleWrapper = ({
+  text,
+  className,
+  ...props
+}: {
+  text?: string;
+  className?: string;
+}) => (
   <CardTitle className={className} {...props}>
     {text}
   </CardTitle>
 );
 
-export const CardDescriptionWrapper = ({ text, className, ...props }: { text?: string; className?: string }) => (
+export const CardDescriptionWrapper = ({
+  text,
+  className,
+  ...props
+}: {
+  text?: string;
+  className?: string;
+}) => (
   <CardDescription className={className} {...props}>
     {text}
   </CardDescription>
 );
 
-export const ButtonWrapper = ({ 
-  text, 
-  onClick, 
-  variant = 'default',
-  size = 'default',
+export const ButtonWrapper = ({
+  text,
+  onClick,
+  variant = "default",
+  size = "default",
   disabled = false,
-  ...props 
-}: { 
-  text?: string; 
-  onClick?: string; 
-  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
-  size?: 'default' | 'sm' | 'lg' | 'icon';
+  ...props
+}: {
+  text?: string;
+  onClick?: string;
+  variant?:
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link";
+  size?: "default" | "sm" | "lg" | "icon";
   disabled?: boolean;
   [key: string]: any;
 }) => (
-  <Button 
+  <Button
     variant={variant}
     size={size}
     disabled={disabled}
-    onClick={onClick ? () => {
-      try {
-        eval(onClick);
-      } catch (e) {
-        console.error('Button onClick error:', e);
-      }
-    } : undefined}
+    onClick={
+      onClick
+        ? () => {
+            try {
+              eval(onClick);
+            } catch (e) {
+              console.error("Button onClick error:", e);
+            }
+          }
+        : undefined
+    }
     {...props}
   >
     {text}
   </Button>
 );
 
-export const BadgeWrapper = ({ 
-  text, 
-  variant = 'default',
-  ...props 
-}: { 
-  text?: string; 
-  variant?: 'default' | 'secondary' | 'destructive' | 'outline';
+export const BadgeWrapper = ({
+  text,
+  variant = "default",
+  ...props
+}: {
+  text?: string;
+  variant?: "default" | "secondary" | "destructive" | "outline";
   [key: string]: any;
 }) => (
   <Badge variant={variant} {...props}>
@@ -63,24 +93,23 @@ export const BadgeWrapper = ({
 );
 
 // Кастомный компонент для отображения статистики
-export const StatsDisplay = ({ 
-  title = 'Статистика', 
-  apiEndpoint = '/api/dashboard/stats' 
-}: { 
-  title?: string; 
-  apiEndpoint?: string; 
+export const StatsDisplay = ({
+  title = "Статистика",
+  apiEndpoint = "/api/dashboard/stats",
+}: {
+  title?: string;
+  apiEndpoint?: string;
 }) => {
   return (
     <Card>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <CardDescription>
-          Данные из API: {apiEndpoint}
-        </CardDescription>
+        <CardDescription>Данные из API: {apiEndpoint}</CardDescription>
       </CardHeader>
       <CardContent>
         <p className="text-muted-foreground">
-          Этот компонент может отображать динамические данные из вашего Laravel API
+          Этот компонент может отображать динамические данные из вашего Laravel
+          API
         </p>
       </CardContent>
     </Card>
@@ -90,9 +119,9 @@ export const StatsDisplay = ({
 // Функция для регистрации всех компонентов
 export function registerBuilderComponents() {
   const BUILDER_API_KEY = import.meta.env.VITE_BUILDER_API_KEY;
-  
+
   if (!BUILDER_API_KEY) {
-    console.warn('Builder.io API key is missing');
+    console.warn("Builder.io API key is missing");
     return;
   }
 
@@ -100,12 +129,12 @@ export function registerBuilderComponents() {
 
   // Регистрация Card
   builder.registerComponent(Card, {
-    name: 'Card',
+    name: "Card",
     inputs: [
       {
-        name: 'className',
-        type: 'string',
-        defaultValue: '',
+        name: "className",
+        type: "string",
+        defaultValue: "",
       },
     ],
     canHaveChildren: true,
@@ -113,12 +142,12 @@ export function registerBuilderComponents() {
 
   // Регистрация CardHeader
   builder.registerComponent(CardHeader, {
-    name: 'CardHeader',
+    name: "CardHeader",
     inputs: [
       {
-        name: 'className',
-        type: 'string',
-        defaultValue: '',
+        name: "className",
+        type: "string",
+        defaultValue: "",
       },
     ],
     canHaveChildren: true,
@@ -126,17 +155,17 @@ export function registerBuilderComponents() {
 
   // Регистрация CardTitle с текстом
   builder.registerComponent(CardTitleWrapper, {
-    name: 'CardTitle',
+    name: "CardTitle",
     inputs: [
       {
-        name: 'text',
-        type: 'string',
-        defaultValue: 'Заголовок',
+        name: "text",
+        type: "string",
+        defaultValue: "Заголовок",
       },
       {
-        name: 'className',
-        type: 'string',
-        defaultValue: '',
+        name: "className",
+        type: "string",
+        defaultValue: "",
       },
     ],
     canHaveChildren: false,
@@ -144,17 +173,17 @@ export function registerBuilderComponents() {
 
   // Регистрация CardDescription с текстом
   builder.registerComponent(CardDescriptionWrapper, {
-    name: 'CardDescription',
+    name: "CardDescription",
     inputs: [
       {
-        name: 'text',
-        type: 'string',
-        defaultValue: 'Описание',
+        name: "text",
+        type: "string",
+        defaultValue: "Описание",
       },
       {
-        name: 'className',
-        type: 'string',
-        defaultValue: '',
+        name: "className",
+        type: "string",
+        defaultValue: "",
       },
     ],
     canHaveChildren: false,
@@ -162,12 +191,12 @@ export function registerBuilderComponents() {
 
   // Регистрация CardContent
   builder.registerComponent(CardContent, {
-    name: 'CardContent',
+    name: "CardContent",
     inputs: [
       {
-        name: 'className',
-        type: 'string',
-        defaultValue: '',
+        name: "className",
+        type: "string",
+        defaultValue: "",
       },
     ],
     canHaveChildren: true,
@@ -175,35 +204,42 @@ export function registerBuilderComponents() {
 
   // Регистрация Button
   builder.registerComponent(ButtonWrapper, {
-    name: 'Button',
+    name: "Button",
     inputs: [
       {
-        name: 'text',
-        type: 'string',
-        defaultValue: 'Кнопка',
+        name: "text",
+        type: "string",
+        defaultValue: "Кнопка",
       },
       {
-        name: 'variant',
-        type: 'string',
-        enum: ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'],
-        defaultValue: 'default',
+        name: "variant",
+        type: "string",
+        enum: [
+          "default",
+          "destructive",
+          "outline",
+          "secondary",
+          "ghost",
+          "link",
+        ],
+        defaultValue: "default",
       },
       {
-        name: 'size',
-        type: 'string',
-        enum: ['default', 'sm', 'lg', 'icon'],
-        defaultValue: 'default',
+        name: "size",
+        type: "string",
+        enum: ["default", "sm", "lg", "icon"],
+        defaultValue: "default",
       },
       {
-        name: 'disabled',
-        type: 'boolean',
+        name: "disabled",
+        type: "boolean",
         defaultValue: false,
       },
       {
-        name: 'onClick',
-        type: 'string',
-        defaultValue: '',
-        helperText: 'JavaScript код для выполнения при клике',
+        name: "onClick",
+        type: "string",
+        defaultValue: "",
+        helperText: "JavaScript код для выполнения при клике",
       },
     ],
     canHaveChildren: false,
@@ -211,18 +247,18 @@ export function registerBuilderComponents() {
 
   // Регистрация Badge
   builder.registerComponent(BadgeWrapper, {
-    name: 'Badge',
+    name: "Badge",
     inputs: [
       {
-        name: 'text',
-        type: 'string',
-        defaultValue: 'Badge',
+        name: "text",
+        type: "string",
+        defaultValue: "Badge",
       },
       {
-        name: 'variant',
-        type: 'string',
-        enum: ['default', 'secondary', 'destructive', 'outline'],
-        defaultValue: 'default',
+        name: "variant",
+        type: "string",
+        enum: ["default", "secondary", "destructive", "outline"],
+        defaultValue: "default",
       },
     ],
     canHaveChildren: false,
@@ -230,22 +266,22 @@ export function registerBuilderComponents() {
 
   // Регистрация StatsDisplay
   builder.registerComponent(StatsDisplay, {
-    name: 'StatsDisplay',
+    name: "StatsDisplay",
     inputs: [
       {
-        name: 'title',
-        type: 'string',
-        defaultValue: 'Статистика',
+        name: "title",
+        type: "string",
+        defaultValue: "Статистика",
       },
       {
-        name: 'apiEndpoint',
-        type: 'string',
-        defaultValue: '/api/dashboard/stats',
-        helperText: 'URL эндпоинта для получения данных',
+        name: "apiEndpoint",
+        type: "string",
+        defaultValue: "/api/dashboard/stats",
+        helperText: "URL эндпоинта для получения данных",
       },
     ],
     canHaveChildren: false,
   });
 
-  console.log('Builder.io components registered successfully');
+  console.log("Builder.io components registered successfully");
 }
