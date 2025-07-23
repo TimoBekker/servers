@@ -24,6 +24,7 @@ import ReportsLicenses from "./pages/ReportsLicenses";
 import ApiTest from "./pages/ApiTest";
 import BuilderAdmin from "./pages/BuilderAdmin";
 import BuilderPageRoute from "./pages/BuilderPage";
+import Test from "./pages/Test";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
