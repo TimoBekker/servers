@@ -1,4 +1,4 @@
-import { builder } from "@builder.io/react";
+import { Builder } from '@builder.io/react';
 import {
   Card,
   CardContent,
@@ -125,10 +125,10 @@ export function registerBuilderComponents() {
     return;
   }
 
-  builder.init(BUILDER_API_KEY);
+  Builder.init(BUILDER_API_KEY);
 
   // Регистрация Card
-  builder.registerComponent(Card, {
+  Builder.registerComponent(Card, {
     name: "Card",
     inputs: [
       {
@@ -141,7 +141,7 @@ export function registerBuilderComponents() {
   });
 
   // Регистрация CardHeader
-  builder.registerComponent(CardHeader, {
+  Builder.registerComponent(CardHeader, {
     name: "CardHeader",
     inputs: [
       {
@@ -154,7 +154,7 @@ export function registerBuilderComponents() {
   });
 
   // Регистрация CardTitle с текстом
-  builder.registerComponent(CardTitleWrapper, {
+  Builder.registerComponent(CardTitleWrapper, {
     name: "CardTitle",
     inputs: [
       {
@@ -172,7 +172,7 @@ export function registerBuilderComponents() {
   });
 
   // Регистрация CardDescription с текстом
-  builder.registerComponent(CardDescriptionWrapper, {
+  Builder.registerComponent(CardDescriptionWrapper, {
     name: "CardDescription",
     inputs: [
       {
@@ -190,7 +190,7 @@ export function registerBuilderComponents() {
   });
 
   // Регистрация CardContent
-  builder.registerComponent(CardContent, {
+  Builder.registerComponent(CardContent, {
     name: "CardContent",
     inputs: [
       {
@@ -203,7 +203,7 @@ export function registerBuilderComponents() {
   });
 
   // Регистрация Button
-  builder.registerComponent(ButtonWrapper, {
+  Builder.registerComponent(ButtonWrapper, {
     name: "Button",
     inputs: [
       {
@@ -246,7 +246,7 @@ export function registerBuilderComponents() {
   });
 
   // Регистрация Badge
-  builder.registerComponent(BadgeWrapper, {
+  Builder.registerComponent(BadgeWrapper, {
     name: "Badge",
     inputs: [
       {
@@ -265,7 +265,7 @@ export function registerBuilderComponents() {
   });
 
   // Регистрация StatsDisplay
-  builder.registerComponent(StatsDisplay, {
+  Builder.registerComponent(StatsDisplay, {
     name: "StatsDisplay",
     inputs: [
       {
