@@ -59,6 +59,7 @@ const App = () => (
             <Route path="/reports/resources" element={<ReportsResources />} />
             <Route path="/reports/licenses" element={<ReportsLicenses />} />
             <Route path="/database-settings" element={<DatabaseSettings />} />
+            <Route path="/test" element={<TestPage />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
