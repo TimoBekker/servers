@@ -291,7 +291,7 @@ export default function EquipmentForm() {
           <Button variant="ghost" size="sm" asChild>
             <Link to="/equipment">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Назад к списк��
+              Назад к списку
             </Link>
           </Button>
           <div>
@@ -318,7 +318,7 @@ export default function EquipmentForm() {
           <TabsContent value="general" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Основная информ��ция</CardTitle>
+                <CardTitle>Основная информация</CardTitle>
                 <CardDescription>
                   Базовые параметры оборудования
                 </CardDescription>
@@ -326,7 +326,7 @@ export default function EquipmentForm() {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="equipment_id">ID оборудования *</Label>
+                    <Label htmlFor="equipment_id">ID оборудовани�� *</Label>
                     <Input
                       id="equipment_id"
                       {...register("equipment_id")}
@@ -651,25 +651,25 @@ export default function EquipmentForm() {
                               onChange={(e) => updateIpAddress(index, "ip_address", e.target.value)}
                             />
                           </div>
-                          <div className="w-32">
-                            <Select
-                              value={item.type}
-                              onValueChange={(value) => updateIpAddress(index, "type", value)}
-                            >
-                              <SelectTrigger>
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="IPv4">IPv4</SelectItem>
-                                <SelectItem value="IPv6">IPv6</SelectItem>
-                              </SelectContent>
-                            </Select>
+                          <div className="flex-1">
+                            <Input
+                              placeholder="Маска подсети"
+                              value={item.subnet_mask}
+                              onChange={(e) => updateIpAddress(index, "subnet_mask", e.target.value)}
+                            />
                           </div>
                           <div className="flex-1">
                             <Input
-                              placeholder="Описание"
-                              value={item.description || ""}
-                              onChange={(e) => updateIpAddress(index, "description", e.target.value)}
+                              placeholder="VLAN"
+                              value={item.vlan}
+                              onChange={(e) => updateIpAddress(index, "vlan", e.target.value)}
+                            />
+                          </div>
+                          <div className="flex-1">
+                            <Input
+                              placeholder="DNS имя"
+                              value={item.dns_name || ""}
+                              onChange={(e) => updateIpAddress(index, "dns_name", e.target.value)}
                             />
                           </div>
                           <Button
@@ -773,8 +773,8 @@ export default function EquipmentForm() {
                           <div className="flex-1">
                             <Input
                               placeholder="Логин"
-                              value={item.login}
-                              onChange={(e) => updatePassword(index, "login", e.target.value)}
+                              value={item.username}
+                              onChange={(e) => updatePassword(index, "username", e.target.value)}
                             />
                           </div>
                           <div className="flex-1 relative">
