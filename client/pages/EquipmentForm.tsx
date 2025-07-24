@@ -204,7 +204,7 @@ export default function EquipmentForm() {
 
   const onSubmit = async (data: EquipmentFormData) => {
     try {
-      const equipmentData = {
+      const equipmentData: any = {
         ...data,
         storage: storage.filter(s => s.name && s.size),
         ip_addresses: ipAddresses.filter(ip => ip.ip_address),
@@ -826,7 +826,7 @@ export default function EquipmentForm() {
           <TabsContent value="additional" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Дополнительная информация</CardTitle>
+                <CardTitle>Дополн��тельная информация</CardTitle>
                 <CardDescription>
                   Документация, связанные задачи и прочие заметки
                 </CardDescription>
