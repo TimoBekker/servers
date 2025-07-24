@@ -10,6 +10,7 @@ import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import Equipment from "./pages/Equipment";
 import EquipmentDetail from "./pages/EquipmentDetail";
+import EquipmentForm from "./pages/EquipmentForm";
 import InformationSystems from "./pages/InformationSystems";
 import Software from "./pages/Software";
 import SoftwareDistributions from "./pages/SoftwareDistributions";
