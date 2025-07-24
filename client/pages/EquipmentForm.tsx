@@ -105,13 +105,14 @@ interface StorageEntry {
 interface IpAddressEntry {
   id?: number;
   ip_address: string;
-  type: string;
-  description?: string;
+  subnet_mask: string;
+  vlan: string;
+  dns_name?: string;
 }
 
 interface PasswordEntry {
   id?: number;
-  login: string;
+  username: string;
   password: string;
   description?: string;
 }
@@ -185,8 +186,19 @@ export default function EquipmentForm() {
       });
 
       setStorage(equipment.storage || []);
-      setIpAddresses(equipment.ip_addresses || []);
-      setPasswords(equipment.passwords || []);
+      setIpAddresses(equipment.ip_addresses?.map(ip => ({
+        id: ip.id,
+        ip_address: ip.ip_address,
+        subnet_mask: ip.subnet_mask,
+        vlan: ip.vlan,
+        dns_name: ip.dns_name
+      })) || []);
+      setPasswords(equipment.passwords?.map(pass => ({
+        id: pass.id,
+        username: pass.username,
+        password: pass.password,
+        description: pass.description
+      })) || []);
     }
   }, [equipment, isEditing, reset]);
 
@@ -194,9 +206,9 @@ export default function EquipmentForm() {
     try {
       const equipmentData = {
         ...data,
-        storage,
-        ip_addresses: ipAddresses,
-        passwords,
+        storage: storage.map(s => ({ ...s, equipment_id: Number(id) || 0 })),
+        ip_addresses: ipAddresses.map(ip => ({ ...ip, equipment_id: Number(id) || 0 })),
+        passwords: passwords.map(p => ({ ...p, equipment_id: Number(id) || 0 })),
       };
 
       if (isEditing && id) {
@@ -228,7 +240,7 @@ export default function EquipmentForm() {
 
   // IP Address management
   const addIpAddress = () => {
-    setIpAddresses([...ipAddresses, { ip_address: "", type: "IPv4", description: "" }]);
+    setIpAddresses([...ipAddresses, { ip_address: "", subnet_mask: "", vlan: "", dns_name: "" }]);
   };
 
   const updateIpAddress = (index: number, field: keyof IpAddressEntry, value: string) => {
@@ -243,7 +255,7 @@ export default function EquipmentForm() {
 
   // Password management
   const addPassword = () => {
-    setPasswords([...passwords, { login: "", password: "", description: "" }]);
+    setPasswords([...passwords, { username: "", password: "", description: "" }]);
   };
 
   const updatePassword = (index: number, field: keyof PasswordEntry, value: string) => {
@@ -279,7 +291,7 @@ export default function EquipmentForm() {
           <Button variant="ghost" size="sm" asChild>
             <Link to="/equipment">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Назад к списку
+              Назад к списк��
             </Link>
           </Button>
           <div>
@@ -306,7 +318,7 @@ export default function EquipmentForm() {
           <TabsContent value="general" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Основная информация</CardTitle>
+                <CardTitle>Основная информ��ция</CardTitle>
                 <CardDescription>
                   Базовые параметры оборудования
                 </CardDescription>
@@ -372,7 +384,7 @@ export default function EquipmentForm() {
                   </div>
 
                   <div>
-                    <Label htmlFor="status">��татус *</Label>
+                    <Label htmlFor="status">Статус *</Label>
                     <Select
                       value={watch("status")}
                       onValueChange={(value) => setValue("status", value as any)}
