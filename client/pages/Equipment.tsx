@@ -109,9 +109,11 @@ export default function Equipment() {
             Управление серверным и сетевым оборудованием
           </p>
         </div>
-        <Button>
-          <Plus className="w-4 h-4 mr-2" />
-          Добавить оборудование
+        <Button asChild>
+          <Link to="/equipment/new">
+            <Plus className="w-4 h-4 mr-2" />
+            Добавить оборудование
+          </Link>
         </Button>
       </div>
 
