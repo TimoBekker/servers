@@ -1,5 +1,17 @@
 import { useState, useEffect } from "react";
-import { Database, CheckCircle, XCircle, Loader2, Save, TestTube, RefreshCw, Settings, Activity, Shield, AlertTriangle } from "lucide-react";
+import {
+  Database,
+  CheckCircle,
+  XCircle,
+  Loader2,
+  Save,
+  TestTube,
+  RefreshCw,
+  Settings,
+  Activity,
+  Shield,
+  AlertTriangle,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -52,7 +64,9 @@ export default function DatabaseSettings() {
   const [isTesting, setIsTesting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [connectionHistory, setConnectionHistory] = useState<{timestamp: string, status: boolean, message: string}[]>([]);
+  const [connectionHistory, setConnectionHistory] = useState<
+    { timestamp: string; status: boolean; message: string }[]
+  >([]);
 
   // Загрузка сохраненных настроек при монтировании
   useEffect(() => {
@@ -76,14 +90,18 @@ export default function DatabaseSettings() {
 
     try {
       // Проверяем health endpoint
-      const healthResponse = await fetch(`http://${testConfig.host}:${testConfig.port}/api/health`);
-      
+      const healthResponse = await fetch(
+        `http://${testConfig.host}:${testConfig.port}/api/health`,
+      );
+
       if (healthResponse.ok) {
         const healthData = await healthResponse.json();
-        
+
         // Получаем статистику для проверки подключения к БД
-        const statsResponse = await fetch(`http://${testConfig.host}:${testConfig.port}/api/equipment-statistics`);
-        
+        const statsResponse = await fetch(
+          `http://${testConfig.host}:${testConfig.port}/api/equipment-statistics`,
+        );
+
         if (statsResponse.ok) {
           const statsData = await statsResponse.json();
           const responseTime = Date.now() - startTime;
@@ -93,18 +111,27 @@ export default function DatabaseSettings() {
             message: "Подключение успешно",
             lastChecked: new Date().toLocaleString("ru-RU"),
             version: healthData.service || "Laravel API",
-            tables: ["equipment", "software", "information_systems", "responsible_persons"],
+            tables: [
+              "equipment",
+              "software",
+              "information_systems",
+              "responsible_persons",
+            ],
             responseTime,
             activeConnections: Math.floor(Math.random() * 10) + 1, // Заглушка
-            dbSize: "15.2 MB" // Заглушка
+            dbSize: "15.2 MB", // Заглушка
           });
 
           // Добавляем запись в историю подключений
-          setConnectionHistory(prev => [
-            { timestamp: new Date().toLocaleString("ru-RU"), status: true, message: "Подключение успешно" },
-            ...prev.slice(0, 9) // Храним последние 10 записей
+          setConnectionHistory((prev) => [
+            {
+              timestamp: new Date().toLocaleString("ru-RU"),
+              status: true,
+              message: "Подключение успешно",
+            },
+            ...prev.slice(0, 9), // Храним последние 10 записей
           ]);
-          
+
           toast({
             title: "Успешно",
             description: "Подключение к базе данных ус��ановлено",
@@ -117,7 +144,8 @@ export default function DatabaseSettings() {
       }
     } catch (error) {
       const responseTime = Date.now() - startTime;
-      const errorMessage = error instanceof Error ? error.message : "Ошибка подключения";
+      const errorMessage =
+        error instanceof Error ? error.message : "Ошибка подключения";
 
       setStatus({
         connected: false,
@@ -127,11 +155,15 @@ export default function DatabaseSettings() {
       });
 
       // Добавляем запись в историю подключений
-      setConnectionHistory(prev => [
-        { timestamp: new Date().toLocaleString("ru-RU"), status: false, message: errorMessage },
-        ...prev.slice(0, 9)
+      setConnectionHistory((prev) => [
+        {
+          timestamp: new Date().toLocaleString("ru-RU"),
+          status: false,
+          message: errorMessage,
+        },
+        ...prev.slice(0, 9),
       ]);
-      
+
       toast({
         title: "Ошибка",
         description: "Не удалось подключиться к базе данных",
@@ -160,13 +192,15 @@ export default function DatabaseSettings() {
     const settings = {
       ...config,
       password: "[СКРЫТО]", // Не экспортируем пароль
-      exported: new Date().toISOString()
+      exported: new Date().toISOString(),
     };
-    const blob = new Blob([JSON.stringify(settings, null, 2)], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify(settings, null, 2)], {
+      type: "application/json",
+    });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = 'database-settings.json';
+    a.download = "database-settings.json";
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -181,12 +215,12 @@ export default function DatabaseSettings() {
       // Обновляем базовый URL в API клиенте
       const apiBaseUrl = `http://${config.host}:${config.port}/api`;
       localStorage.setItem("api-base-url", apiBaseUrl);
-      
+
       toast({
         title: "Сохранено",
         description: "Настройки подключения сохранены",
       });
-      
+
       // Автоматически тестируем после сохранения
       await testConnection();
     } catch (error) {
@@ -201,7 +235,7 @@ export default function DatabaseSettings() {
   };
 
   const handleInputChange = (field: keyof DatabaseConfig, value: string) => {
-    setConfig(prev => ({
+    setConfig((prev) => ({
       ...prev,
       [field]: value,
     }));
@@ -216,7 +250,7 @@ export default function DatabaseSettings() {
         </Badge>
       );
     }
-    
+
     if (status.connected) {
       return (
         <Badge className="bg-green-100 text-green-800 hover:bg-green-100 flex items-center space-x-1">
@@ -225,7 +259,7 @@ export default function DatabaseSettings() {
         </Badge>
       );
     }
-    
+
     return (
       <Badge variant="destructive" className="flex items-center space-x-1">
         <XCircle className="w-3 h-3" />
@@ -277,7 +311,7 @@ export default function DatabaseSettings() {
                 />
               </div>
             </div>
-            
+
             <div>
               <Label htmlFor="database">База данных</Label>
               <Input
@@ -287,7 +321,7 @@ export default function DatabaseSettings() {
                 placeholder="servers_db"
               />
             </div>
-            
+
             <div>
               <Label htmlFor="username">Пользователь (опционально)</Label>
               <Input
@@ -297,7 +331,7 @@ export default function DatabaseSettings() {
                 placeholder="postgres"
               />
             </div>
-            
+
             <div>
               <Label htmlFor="password">Пароль (опционально)</Label>
               <Input
@@ -347,7 +381,7 @@ export default function DatabaseSettings() {
                   className="flex-1"
                 >
                   <Settings className="w-4 h-4 mr-2" />
-                  {showAdvanced ? 'Скрыть' : 'Показать'} расширенные
+                  {showAdvanced ? "Скрыть" : "Показать"} расширенные
                 </Button>
 
                 <Button
@@ -381,27 +415,30 @@ export default function DatabaseSettings() {
                 <div className="space-y-3">
                   <div>
                     <Label className="text-sm">Timeout подключения (сек)</Label>
-                    <Input
-                      type="number"
-                      defaultValue="30"
-                      className="mt-1"
-                    />
+                    <Input type="number" defaultValue="30" className="mt-1" />
                   </div>
                   <div>
-                    <Label className="text-sm">Максимальное количество подключений</Label>
-                    <Input
-                      type="number"
-                      defaultValue="10"
-                      className="mt-1"
-                    />
+                    <Label className="text-sm">
+                      Максимальное количество подключений
+                    </Label>
+                    <Input type="number" defaultValue="10" className="mt-1" />
                   </div>
                   <div className="flex items-center space-x-2">
                     <input type="checkbox" id="ssl" className="rounded" />
-                    <Label htmlFor="ssl" className="text-sm">Использовать SSL</Label>
+                    <Label htmlFor="ssl" className="text-sm">
+                      Использовать SSL
+                    </Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <input type="checkbox" id="autoConnect" className="rounded" defaultChecked />
-                    <Label htmlFor="autoConnect" className="text-sm">Автоматическое подключение при старте</Label>
+                    <input
+                      type="checkbox"
+                      id="autoConnect"
+                      className="rounded"
+                      defaultChecked
+                    />
+                    <Label htmlFor="autoConnect" className="text-sm">
+                      Автоматическое подключение при старте
+                    </Label>
                   </div>
                 </div>
               </div>
@@ -427,7 +464,7 @@ export default function DatabaseSettings() {
               </Label>
               <p className="font-medium">{status.message}</p>
             </div>
-            
+
             {status.lastChecked && (
               <div>
                 <Label className="text-sm font-medium text-muted-foreground">
@@ -436,7 +473,7 @@ export default function DatabaseSettings() {
                 <p className="font-medium">{status.lastChecked}</p>
               </div>
             )}
-            
+
             {status.version && (
               <div>
                 <Label className="text-sm font-medium text-muted-foreground">
@@ -518,7 +555,10 @@ export default function DatabaseSettings() {
             <CardContent>
               <div className="space-y-2">
                 {connectionHistory.slice(0, 5).map((entry, index) => (
-                  <div key={index} className="flex items-center justify-between p-2 rounded-lg bg-muted/50">
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-2 rounded-lg bg-muted/50"
+                  >
                     <div className="flex items-center space-x-3">
                       {entry.status ? (
                         <CheckCircle className="w-4 h-4 text-green-600" />
@@ -527,10 +567,15 @@ export default function DatabaseSettings() {
                       )}
                       <div>
                         <p className="font-medium text-sm">{entry.message}</p>
-                        <p className="text-xs text-muted-foreground">{entry.timestamp}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {entry.timestamp}
+                        </p>
                       </div>
                     </div>
-                    <Badge variant={entry.status ? "default" : "destructive"} className="text-xs">
+                    <Badge
+                      variant={entry.status ? "default" : "destructive"}
+                      className="text-xs"
+                    >
                       {entry.status ? "Успех" : "Ошибка"}
                     </Badge>
                   </div>
@@ -562,7 +607,7 @@ export default function DatabaseSettings() {
                 <p>GET /api/equipment-statistics</p>
               </div>
             </div>
-            
+
             <div>
               <h4 className="font-semibold mb-2">Программное обеспечение</h4>
               <div className="space-y-1 text-sm font-mono">
@@ -573,7 +618,7 @@ export default function DatabaseSettings() {
                 <p>DELETE /api/software/&#123;id&#125;</p>
               </div>
             </div>
-            
+
             <div>
               <h4 className="font-semibold mb-2">Информационные системы</h4>
               <div className="space-y-1 text-sm font-mono">
@@ -584,7 +629,7 @@ export default function DatabaseSettings() {
                 <p>DELETE /api/information-systems/&#123;id&#125;</p>
               </div>
             </div>
-            
+
             <div>
               <h4 className="font-semibold mb-2">Системные</h4>
               <div className="space-y-1 text-sm font-mono">

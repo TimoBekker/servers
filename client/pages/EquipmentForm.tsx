@@ -17,7 +17,7 @@ import {
   CheckCircle,
   XCircle,
   Eye,
-  EyeOff
+  EyeOff,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -56,8 +56,19 @@ const equipmentSchema = z.object({
   name: z.string().min(1, "Название обязательно"),
   vmware_name: z.string().optional(),
   hostname: z.string().optional(),
-  status: z.enum(["в работе", "выключено / не в работе", "выведено из эксплуатации", "удалено"]),
-  type: z.enum(["Сервер", "Виртуальный сервер", "Сетевое оборудование", "Электропитание", "Система хранения"]),
+  status: z.enum([
+    "в работе",
+    "выключено / не в работе",
+    "выведено из эксплуатации",
+    "удалено",
+  ]),
+  type: z.enum([
+    "Сервер",
+    "Виртуальный сервер",
+    "Сетевое оборудование",
+    "Электропитание",
+    "Система хранения",
+  ]),
   parent_equipment: z.string().optional(),
   description: z.string().optional(),
   location: z.string().optional(),
@@ -82,16 +93,35 @@ const equipmentSchema = z.object({
 type EquipmentFormData = z.infer<typeof equipmentSchema>;
 
 const statusOptions = [
-  { value: "в работе", label: "В работе", icon: CheckCircle, color: "text-green-600" },
-  { value: "выключено / не в работе", label: "Выключено / не в работе", icon: XCircle, color: "text-yellow-600" },
-  { value: "выведено из эксплуатации", label: "Выведено из эксплуатации", icon: XCircle, color: "text-orange-600" },
+  {
+    value: "в работе",
+    label: "В работе",
+    icon: CheckCircle,
+    color: "text-green-600",
+  },
+  {
+    value: "выключено / не в работе",
+    label: "Выключено / не в работе",
+    icon: XCircle,
+    color: "text-yellow-600",
+  },
+  {
+    value: "выведено из эксплуатации",
+    label: "Выведено из эксплуатации",
+    icon: XCircle,
+    color: "text-orange-600",
+  },
   { value: "удалено", label: "Удалено", icon: Trash2, color: "text-red-600" },
 ];
 
 const typeOptions = [
   { value: "Сервер", label: "Сервер", icon: Server },
   { value: "Виртуальный сервер", label: "Вир��уальный сервер", icon: Server },
-  { value: "Сетевое оборудование", label: "Сетевое оборудование", icon: Network },
+  {
+    value: "Сетевое оборудование",
+    label: "Сетевое оборудование",
+    icon: Network,
+  },
   { value: "Электропитание", label: "Электропитание", icon: Zap },
   { value: "Система хранения", label: "Система хранения", icon: Database },
 ];
@@ -123,7 +153,9 @@ export default function EquipmentForm() {
   const isEditing = Boolean(id);
 
   // Data fetching
-  const { data: equipment, isLoading: isLoadingEquipment } = useEquipmentDetail(id || "");
+  const { data: equipment, isLoading: isLoadingEquipment } = useEquipmentDetail(
+    id || "",
+  );
   const createMutation = useCreateEquipment();
   const updateMutation = useUpdateEquipment();
 
@@ -131,7 +163,9 @@ export default function EquipmentForm() {
   const [storage, setStorage] = useState<StorageEntry[]>([]);
   const [ipAddresses, setIpAddresses] = useState<IpAddressEntry[]>([]);
   const [passwords, setPasswords] = useState<PasswordEntry[]>([]);
-  const [showPasswords, setShowPasswords] = useState<Record<number, boolean>>({});
+  const [showPasswords, setShowPasswords] = useState<Record<number, boolean>>(
+    {},
+  );
 
   const {
     register,
@@ -186,19 +220,23 @@ export default function EquipmentForm() {
       });
 
       setStorage(equipment.storage || []);
-      setIpAddresses(equipment.ip_addresses?.map(ip => ({
-        id: ip.id,
-        ip_address: ip.ip_address,
-        subnet_mask: ip.subnet_mask,
-        vlan: ip.vlan,
-        dns_name: ip.dns_name
-      })) || []);
-      setPasswords(equipment.passwords?.map(pass => ({
-        id: pass.id,
-        username: pass.username,
-        password: pass.password,
-        description: pass.description
-      })) || []);
+      setIpAddresses(
+        equipment.ip_addresses?.map((ip) => ({
+          id: ip.id,
+          ip_address: ip.ip_address,
+          subnet_mask: ip.subnet_mask,
+          vlan: ip.vlan,
+          dns_name: ip.dns_name,
+        })) || [],
+      );
+      setPasswords(
+        equipment.passwords?.map((pass) => ({
+          id: pass.id,
+          username: pass.username,
+          password: pass.password,
+          description: pass.description,
+        })) || [],
+      );
     }
   }, [equipment, isEditing, reset]);
 
@@ -206,13 +244,16 @@ export default function EquipmentForm() {
     try {
       const equipmentData: any = {
         ...data,
-        storage: storage.filter(s => s.name && s.size),
-        ip_addresses: ipAddresses.filter(ip => ip.ip_address),
-        passwords: passwords.filter(p => p.username && p.password),
+        storage: storage.filter((s) => s.name && s.size),
+        ip_addresses: ipAddresses.filter((ip) => ip.ip_address),
+        passwords: passwords.filter((p) => p.username && p.password),
       };
 
       if (isEditing && id) {
-        await updateMutation.mutateAsync({ equipmentId: id, data: equipmentData });
+        await updateMutation.mutateAsync({
+          equipmentId: id,
+          data: equipmentData,
+        });
       } else {
         await createMutation.mutateAsync(equipmentData);
       }
@@ -228,7 +269,11 @@ export default function EquipmentForm() {
     setStorage([...storage, { name: "", size: "" }]);
   };
 
-  const updateStorage = (index: number, field: keyof StorageEntry, value: string) => {
+  const updateStorage = (
+    index: number,
+    field: keyof StorageEntry,
+    value: string,
+  ) => {
     const updated = [...storage];
     updated[index] = { ...updated[index], [field]: value };
     setStorage(updated);
@@ -240,10 +285,17 @@ export default function EquipmentForm() {
 
   // IP Address management
   const addIpAddress = () => {
-    setIpAddresses([...ipAddresses, { ip_address: "", subnet_mask: "", vlan: "", dns_name: "" }]);
+    setIpAddresses([
+      ...ipAddresses,
+      { ip_address: "", subnet_mask: "", vlan: "", dns_name: "" },
+    ]);
   };
 
-  const updateIpAddress = (index: number, field: keyof IpAddressEntry, value: string) => {
+  const updateIpAddress = (
+    index: number,
+    field: keyof IpAddressEntry,
+    value: string,
+  ) => {
     const updated = [...ipAddresses];
     updated[index] = { ...updated[index], [field]: value };
     setIpAddresses(updated);
@@ -255,10 +307,17 @@ export default function EquipmentForm() {
 
   // Password management
   const addPassword = () => {
-    setPasswords([...passwords, { username: "", password: "", description: "" }]);
+    setPasswords([
+      ...passwords,
+      { username: "", password: "", description: "" },
+    ]);
   };
 
-  const updatePassword = (index: number, field: keyof PasswordEntry, value: string) => {
+  const updatePassword = (
+    index: number,
+    field: keyof PasswordEntry,
+    value: string,
+  ) => {
     const updated = [...passwords];
     updated[index] = { ...updated[index], [field]: value };
     setPasswords(updated);
@@ -269,9 +328,9 @@ export default function EquipmentForm() {
   };
 
   const togglePasswordVisibility = (index: number) => {
-    setShowPasswords(prev => ({
+    setShowPasswords((prev) => ({
       ...prev,
-      [index]: !prev[index]
+      [index]: !prev[index],
     }));
   };
 
@@ -296,10 +355,14 @@ export default function EquipmentForm() {
           </Button>
           <div>
             <h1 className="text-3xl font-bold">
-              {isEditing ? "Редактирование оборудования" : "Добавление оборудования"}
+              {isEditing
+                ? "Редактирование оборудования"
+                : "Добавление оборудования"}
             </h1>
             <p className="text-muted-foreground">
-              {isEditing ? "Изменение параметров существующего оборудования" : "Создание нового оборудования в системе"}
+              {isEditing
+                ? "Изменение параметров существующего оборудования"
+                : "Создание нового оборудования в системе"}
             </p>
           </div>
         </div>
@@ -387,7 +450,9 @@ export default function EquipmentForm() {
                     <Label htmlFor="status">Статус *</Label>
                     <Select
                       value={watch("status")}
-                      onValueChange={(value) => setValue("status", value as any)}
+                      onValueChange={(value) =>
+                        setValue("status", value as any)
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Выберите статус" />
@@ -398,7 +463,9 @@ export default function EquipmentForm() {
                           return (
                             <SelectItem key={option.value} value={option.value}>
                               <div className="flex items-center space-x-2">
-                                <IconComponent className={`w-4 h-4 ${option.color}`} />
+                                <IconComponent
+                                  className={`w-4 h-4 ${option.color}`}
+                                />
                                 <span>{option.label}</span>
                               </div>
                             </SelectItem>
@@ -424,7 +491,9 @@ export default function EquipmentForm() {
                         />
                       </div>
                       <div>
-                        <Label htmlFor="parent_equipment">Родительское оборудование</Label>
+                        <Label htmlFor="parent_equipment">
+                          Родительское оборудование
+                        </Label>
                         <Input
                           id="parent_equipment"
                           {...register("parent_equipment")}
@@ -480,7 +549,9 @@ export default function EquipmentForm() {
                   {equipmentType === "Виртуальный сервер" && (
                     <>
                       <div>
-                        <Label htmlFor="virtual_cpu">Количество виртуальных CPU</Label>
+                        <Label htmlFor="virtual_cpu">
+                          Количество виртуальных CPU
+                        </Label>
                         <Input
                           id="virtual_cpu"
                           type="number"
@@ -509,7 +580,9 @@ export default function EquipmentForm() {
                   </div>
 
                   <div>
-                    <Label htmlFor="specifications">Технические характеристики</Label>
+                    <Label htmlFor="specifications">
+                      Технические характеристики
+                    </Label>
                     <Textarea
                       id="specifications"
                       {...register("specifications")}
@@ -523,35 +596,48 @@ export default function EquipmentForm() {
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     <Label className="text-base font-semibold">Хранилища</Label>
-                    <Button type="button" variant="outline" size="sm" onClick={addStorage}>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={addStorage}
+                    >
                       <Plus className="w-4 h-4 mr-2" />
                       Добавить хранилище
                     </Button>
                   </div>
-                  
+
                   {storage.length === 0 ? (
                     <Alert>
                       <HardDrive className="h-4 w-4" />
                       <AlertDescription>
-                        Хранилища не добавлены. Нажмите кнопку выше для добавления.
+                        Хранилища не добавлены. Нажмите кнопку выше для
+                        добавления.
                       </AlertDescription>
                     </Alert>
                   ) : (
                     <div className="space-y-3">
                       {storage.map((item, index) => (
-                        <div key={index} className="flex items-center space-x-3 p-3 border rounded-lg">
+                        <div
+                          key={index}
+                          className="flex items-center space-x-3 p-3 border rounded-lg"
+                        >
                           <div className="flex-1">
                             <Input
                               placeholder="Название хранилища"
                               value={item.name}
-                              onChange={(e) => updateStorage(index, "name", e.target.value)}
+                              onChange={(e) =>
+                                updateStorage(index, "name", e.target.value)
+                              }
                             />
                           </div>
                           <div className="flex-1">
                             <Input
                               placeholder="Размер (например, 1TB SSD)"
                               value={item.size}
-                              onChange={(e) => updateStorage(index, "size", e.target.value)}
+                              onChange={(e) =>
+                                updateStorage(index, "size", e.target.value)
+                              }
                             />
                           </div>
                           <Button
@@ -573,14 +659,18 @@ export default function EquipmentForm() {
                   <div className="flex items-center space-x-2">
                     <Switch
                       checked={hasBackup}
-                      onCheckedChange={(checked) => setValue("has_backup", checked)}
+                      onCheckedChange={(checked) =>
+                        setValue("has_backup", checked)
+                      }
                     />
                     <Label>Резервное копирование настроено</Label>
                   </div>
 
                   {hasBackup && (
                     <div>
-                      <Label htmlFor="last_backup_date">Дата последнего резервного копирования</Label>
+                      <Label htmlFor="last_backup_date">
+                        Дата последнего резервного копирования
+                      </Label>
                       <Input
                         id="last_backup_date"
                         type="date"
@@ -592,7 +682,9 @@ export default function EquipmentForm() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="commissioned_date">Дата ввода в эксплуатацию</Label>
+                    <Label htmlFor="commissioned_date">
+                      Дата ввода в эксплуатацию
+                    </Label>
                     <Input
                       id="commissioned_date"
                       type="date"
@@ -601,7 +693,9 @@ export default function EquipmentForm() {
                   </div>
 
                   <div>
-                    <Label htmlFor="decommissioned_date">Дата вывода из эксплуатации</Label>
+                    <Label htmlFor="decommissioned_date">
+                      Дата вывода из эксплуатации
+                    </Label>
                     <Input
                       id="decommissioned_date"
                       type="date"
@@ -627,49 +721,78 @@ export default function EquipmentForm() {
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     <Label className="text-base font-semibold">IP-адреса</Label>
-                    <Button type="button" variant="outline" size="sm" onClick={addIpAddress}>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={addIpAddress}
+                    >
                       <Plus className="w-4 h-4 mr-2" />
                       Добавить IP-адрес
                     </Button>
                   </div>
-                  
+
                   {ipAddresses.length === 0 ? (
                     <Alert>
                       <Network className="h-4 w-4" />
                       <AlertDescription>
-                        IP-адреса не добавлены. Нажмите кнопку выше для добавления.
+                        IP-адреса не добавлены. Нажмите кнопку выше для
+                        добавления.
                       </AlertDescription>
                     </Alert>
                   ) : (
                     <div className="space-y-3">
                       {ipAddresses.map((item, index) => (
-                        <div key={index} className="flex items-center space-x-3 p-3 border rounded-lg">
+                        <div
+                          key={index}
+                          className="flex items-center space-x-3 p-3 border rounded-lg"
+                        >
                           <div className="flex-1">
                             <Input
                               placeholder="IP-адрес"
                               value={item.ip_address}
-                              onChange={(e) => updateIpAddress(index, "ip_address", e.target.value)}
+                              onChange={(e) =>
+                                updateIpAddress(
+                                  index,
+                                  "ip_address",
+                                  e.target.value,
+                                )
+                              }
                             />
                           </div>
                           <div className="flex-1">
                             <Input
                               placeholder="Маска подсети"
                               value={item.subnet_mask}
-                              onChange={(e) => updateIpAddress(index, "subnet_mask", e.target.value)}
+                              onChange={(e) =>
+                                updateIpAddress(
+                                  index,
+                                  "subnet_mask",
+                                  e.target.value,
+                                )
+                              }
                             />
                           </div>
                           <div className="flex-1">
                             <Input
                               placeholder="VLAN"
                               value={item.vlan}
-                              onChange={(e) => updateIpAddress(index, "vlan", e.target.value)}
+                              onChange={(e) =>
+                                updateIpAddress(index, "vlan", e.target.value)
+                              }
                             />
                           </div>
                           <div className="flex-1">
                             <Input
                               placeholder="DNS имя"
                               value={item.dns_name || ""}
-                              onChange={(e) => updateIpAddress(index, "dns_name", e.target.value)}
+                              onChange={(e) =>
+                                updateIpAddress(
+                                  index,
+                                  "dns_name",
+                                  e.target.value,
+                                )
+                              }
                             />
                           </div>
                           <Button
@@ -688,13 +811,17 @@ export default function EquipmentForm() {
 
                 {/* Access Settings */}
                 <div className="space-y-4">
-                  <Label className="text-base font-semibold">Сетевые доступы</Label>
-                  
+                  <Label className="text-base font-semibold">
+                    Сетевые доступы
+                  </Label>
+
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="flex items-center space-x-2">
                       <Switch
                         checked={watch("kspd_access")}
-                        onCheckedChange={(checked) => setValue("kspd_access", checked)}
+                        onCheckedChange={(checked) =>
+                          setValue("kspd_access", checked)
+                        }
                       />
                       <Label>Доступ к КСПД</Label>
                     </div>
@@ -702,7 +829,9 @@ export default function EquipmentForm() {
                     <div className="flex items-center space-x-2">
                       <Switch
                         checked={watch("internet_access")}
-                        onCheckedChange={(checked) => setValue("internet_access", checked)}
+                        onCheckedChange={(checked) =>
+                          setValue("internet_access", checked)
+                        }
                       />
                       <Label>Доступ в интернет</Label>
                     </div>
@@ -710,7 +839,9 @@ export default function EquipmentForm() {
                     <div className="flex items-center space-x-2">
                       <Switch
                         checked={watch("arcsight_connection")}
-                        onCheckedChange={(checked) => setValue("arcsight_connection", checked)}
+                        onCheckedChange={(checked) =>
+                          setValue("arcsight_connection", checked)
+                        }
                       />
                       <Label>Подключение к ArcSight</Label>
                     </div>
@@ -729,7 +860,9 @@ export default function EquipmentForm() {
                   </div>
 
                   <div>
-                    <Label htmlFor="internet_forwarding">Проброс в интернет</Label>
+                    <Label htmlFor="internet_forwarding">
+                      Проброс в интернет
+                    </Label>
                     <Textarea
                       id="internet_forwarding"
                       {...register("internet_forwarding")}
@@ -739,7 +872,9 @@ export default function EquipmentForm() {
                   </div>
 
                   <div className="md:col-span-2">
-                    <Label htmlFor="listening_ports">Прослушиваемые порты</Label>
+                    <Label htmlFor="listening_ports">
+                      Прослушиваемые порты
+                    </Label>
                     <Textarea
                       id="listening_ports"
                       {...register("listening_ports")}
@@ -752,29 +887,46 @@ export default function EquipmentForm() {
                 {/* Passwords */}
                 <div>
                   <div className="flex items-center justify-between mb-4">
-                    <Label className="text-base font-semibold">Учетные записи</Label>
-                    <Button type="button" variant="outline" size="sm" onClick={addPassword}>
+                    <Label className="text-base font-semibold">
+                      Учетные записи
+                    </Label>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={addPassword}
+                    >
                       <Plus className="w-4 h-4 mr-2" />
                       Добавить учетную запись
                     </Button>
                   </div>
-                  
+
                   {passwords.length === 0 ? (
                     <Alert>
                       <CheckCircle className="h-4 w-4" />
                       <AlertDescription>
-                        Учетные записи не добавлены. Нажмите кнопку выше для добавления.
+                        Учетные записи не добавлены. Нажмите кнопку выше для
+                        добавления.
                       </AlertDescription>
                     </Alert>
                   ) : (
                     <div className="space-y-3">
                       {passwords.map((item, index) => (
-                        <div key={index} className="flex items-center space-x-3 p-3 border rounded-lg">
+                        <div
+                          key={index}
+                          className="flex items-center space-x-3 p-3 border rounded-lg"
+                        >
                           <div className="flex-1">
                             <Input
                               placeholder="Логин"
                               value={item.username}
-                              onChange={(e) => updatePassword(index, "username", e.target.value)}
+                              onChange={(e) =>
+                                updatePassword(
+                                  index,
+                                  "username",
+                                  e.target.value,
+                                )
+                              }
                             />
                           </div>
                           <div className="flex-1 relative">
@@ -782,7 +934,13 @@ export default function EquipmentForm() {
                               type={showPasswords[index] ? "text" : "password"}
                               placeholder="Пароль"
                               value={item.password}
-                              onChange={(e) => updatePassword(index, "password", e.target.value)}
+                              onChange={(e) =>
+                                updatePassword(
+                                  index,
+                                  "password",
+                                  e.target.value,
+                                )
+                              }
                             />
                             <Button
                               type="button"
@@ -802,7 +960,13 @@ export default function EquipmentForm() {
                             <Input
                               placeholder="Описание"
                               value={item.description || ""}
-                              onChange={(e) => updatePassword(index, "description", e.target.value)}
+                              onChange={(e) =>
+                                updatePassword(
+                                  index,
+                                  "description",
+                                  e.target.value,
+                                )
+                              }
                             />
                           </div>
                           <Button
@@ -867,9 +1031,15 @@ export default function EquipmentForm() {
           </Button>
           <Button
             type="submit"
-            disabled={isSubmitting || createMutation.isPending || updateMutation.isPending}
+            disabled={
+              isSubmitting ||
+              createMutation.isPending ||
+              updateMutation.isPending
+            }
           >
-            {isSubmitting || createMutation.isPending || updateMutation.isPending ? (
+            {isSubmitting ||
+            createMutation.isPending ||
+            updateMutation.isPending ? (
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
             ) : (
               <Save className="w-4 h-4 mr-2" />
