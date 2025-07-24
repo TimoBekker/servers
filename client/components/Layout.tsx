@@ -83,6 +83,11 @@ const navigation = [
     icon: BookOpen,
   },
   {
+    name: "Настройки БД",
+    href: "/database-settings",
+    icon: Settings,
+  },
+  {
     name: "Отчеты",
     href: "/reports",
     icon: BarChart3,

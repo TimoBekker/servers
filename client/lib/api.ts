@@ -1,4 +1,8 @@
-const API_BASE_URL = 'http://localhost:8000/api';
+// Получаем базовый URL из localStorage или используем значение по умолчанию
+const getApiBaseUrl = () => {
+  const savedUrl = localStorage.getItem('api-base-url');
+  return savedUrl || 'http://localhost:8000/api';
+};
 
 // Types based on Laravel API responses
 export interface Equipment {
@@ -109,8 +113,13 @@ export interface EquipmentStatistics {
 class ApiClient {
   private baseUrl: string;
 
-  constructor(baseUrl: string = API_BASE_URL) {
-    this.baseUrl = baseUrl;
+  constructor() {
+    this.baseUrl = getApiBaseUrl();
+  }
+
+  // Метод для обновления базового URL
+  updateBaseUrl(newBaseUrl: string) {
+    this.baseUrl = newBaseUrl;
   }
 
   private async request<T>(

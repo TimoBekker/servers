@@ -22,6 +22,7 @@ import ReportsResponsible from "./pages/ReportsResponsible";
 import ReportsResources from "./pages/ReportsResources";
 import ReportsLicenses from "./pages/ReportsLicenses";
 import NotFound from "./pages/NotFound";
+import DatabaseSettings from "./pages/DatabaseSettings";
 
 const queryClient = new QueryClient();
 
@@ -56,6 +57,7 @@ const App = () => (
             />
             <Route path="/reports/resources" element={<ReportsResources />} />
             <Route path="/reports/licenses" element={<ReportsLicenses />} />
+            <Route path="/database-settings" element={<DatabaseSettings />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
