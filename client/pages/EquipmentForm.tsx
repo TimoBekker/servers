@@ -90,7 +90,7 @@ const statusOptions = [
 
 const typeOptions = [
   { value: "Сервер", label: "Сервер", icon: Server },
-  { value: "Виртуальный сервер", label: "Виртуальный сервер", icon: Server },
+  { value: "Виртуальный сервер", label: "Вир��уальный сервер", icon: Server },
   { value: "Сетевое оборудование", label: "Сетевое оборудование", icon: Network },
   { value: "Электропитание", label: "Электропитание", icon: Zap },
   { value: "Система хранения", label: "Система хранения", icon: Database },
@@ -206,9 +206,9 @@ export default function EquipmentForm() {
     try {
       const equipmentData = {
         ...data,
-        storage: storage.map(s => ({ ...s, equipment_id: Number(id) || 0 })),
-        ip_addresses: ipAddresses.map(ip => ({ ...ip, equipment_id: Number(id) || 0 })),
-        passwords: passwords.map(p => ({ ...p, equipment_id: Number(id) || 0 })),
+        storage: storage.filter(s => s.name && s.size),
+        ip_addresses: ipAddresses.filter(ip => ip.ip_address),
+        passwords: passwords.filter(p => p.username && p.password),
       };
 
       if (isEditing && id) {
@@ -326,7 +326,7 @@ export default function EquipmentForm() {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="equipment_id">ID оборудовани�� *</Label>
+                    <Label htmlFor="equipment_id">ID оборудования *</Label>
                     <Input
                       id="equipment_id"
                       {...register("equipment_id")}
