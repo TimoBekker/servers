@@ -149,15 +149,17 @@ export default function EquipmentDetail() {
           <div>
             <h1 className="text-3xl font-bold">{equipment.name}</h1>
             <p className="text-muted-foreground">
-              {equipment.vmware_name || 'VMware имя не указано'} • {equipment.hostname || 'Hostname не указан'}
+              {equipment.vmware_name || 'VMware имя не указан��'} • {equipment.hostname || 'Hostname не указан'}
             </p>
           </div>
         </div>
         <div className="flex items-center space-x-2">
           {getStatusBadge(equipment.status)}
-          <Button>
-            <Edit className="w-4 h-4 mr-2" />
-            Редактировать
+          <Button asChild>
+            <Link to={`/equipment/${id}/edit`}>
+              <Edit className="w-4 h-4 mr-2" />
+              Редактировать
+            </Link>
           </Button>
         </div>
       </div>
