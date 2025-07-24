@@ -10,6 +10,7 @@ import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import Equipment from "./pages/Equipment";
 import EquipmentDetail from "./pages/EquipmentDetail";
+import EquipmentForm from "./pages/EquipmentForm";
 import InformationSystems from "./pages/InformationSystems";
 import Software from "./pages/Software";
 import SoftwareDistributions from "./pages/SoftwareDistributions";
@@ -36,7 +37,9 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/equipment" element={<Equipment />} />
+            <Route path="/equipment/new" element={<EquipmentForm />} />
             <Route path="/equipment/:id" element={<EquipmentDetail />} />
+            <Route path="/equipment/:id/edit" element={<EquipmentForm />} />
             <Route
               path="/information-systems"
               element={<InformationSystems />}

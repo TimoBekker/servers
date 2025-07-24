@@ -63,14 +63,19 @@ const getStatusBadge = (status: string) => {
 export default function Equipment() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  
-  const { data: equipmentData, isLoading, error } = useEquipment({
+
+  const {
+    data: equipmentData,
+    isLoading,
+    error,
+  } = useEquipment({
     page: currentPage,
     per_page: 15,
     search: searchTerm || undefined,
   });
-  
-  const { data: statistics, isLoading: statsLoading } = useEquipmentStatistics();
+
+  const { data: statistics, isLoading: statsLoading } =
+    useEquipmentStatistics();
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
@@ -109,9 +114,11 @@ export default function Equipment() {
             Управление серверным и сетевым оборудованием
           </p>
         </div>
-        <Button>
-          <Plus className="w-4 h-4 mr-2" />
-          Добавить оборудование
+        <Button asChild>
+          <Link to="/equipment/new">
+            <Plus className="w-4 h-4 mr-2" />
+            Добавить оборудование
+          </Link>
         </Button>
       </div>
 
@@ -131,7 +138,9 @@ export default function Equipment() {
               </div>
             ) : (
               <>
-                <div className="text-2xl font-bold">{statistics?.total || 0}</div>
+                <div className="text-2xl font-bold">
+                  {statistics?.total || 0}
+                </div>
                 <p className="text-xs text-muted-foreground">
                   единиц оборудования
                 </p>
@@ -155,9 +164,14 @@ export default function Equipment() {
                   {statistics?.by_status?.["в работе"] || 0}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {statistics?.total 
-                    ? Math.round(((statistics.by_status?.["в работе"] || 0) / statistics.total) * 100)
-                    : 0}% от общего
+                  {statistics?.total
+                    ? Math.round(
+                        ((statistics.by_status?.["в работе"] || 0) /
+                          statistics.total) *
+                          100,
+                      )
+                    : 0}
+                  % от общего
                 </p>
               </>
             )}
@@ -179,9 +193,15 @@ export default function Equipment() {
                   {statistics?.by_status?.["выключено / не в работе"] || 0}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {statistics?.total 
-                    ? Math.round(((statistics.by_status?.["выключено / не в работе"] || 0) / statistics.total) * 100)
-                    : 0}% от общего
+                  {statistics?.total
+                    ? Math.round(
+                        ((statistics.by_status?.["выключено / не в работе"] ||
+                          0) /
+                          statistics.total) *
+                          100,
+                      )
+                    : 0}
+                  % от общего
                 </p>
               </>
             )}
@@ -205,9 +225,15 @@ export default function Equipment() {
                   {statistics?.by_status?.["выведено из эксплуатации"] || 0}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {statistics?.total 
-                    ? Math.round(((statistics.by_status?.["выведено из эксплуатации"] || 0) / statistics.total) * 100)
-                    : 0}% от общего
+                  {statistics?.total
+                    ? Math.round(
+                        ((statistics.by_status?.["выведено из эксплуатации"] ||
+                          0) /
+                          statistics.total) *
+                          100,
+                      )
+                    : 0}
+                  % от общего
                 </p>
               </>
             )}
@@ -227,8 +253,8 @@ export default function Equipment() {
           <div className="flex items-center space-x-2 mb-4">
             <div className="relative flex-1">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input 
-                placeholder="Поиск оборудования..." 
+              <Input
+                placeholder="Поиск оборудования..."
                 className="pl-8"
                 value={searchTerm}
                 onChange={(e) => handleSearch(e.target.value)}
@@ -262,7 +288,9 @@ export default function Equipment() {
               <TableBody>
                 {equipmentData?.data?.map((item: EquipmentType) => (
                   <TableRow key={item.equipment_id}>
-                    <TableCell className="font-medium">{item.equipment_id}</TableCell>
+                    <TableCell className="font-medium">
+                      {item.equipment_id}
+                    </TableCell>
                     <TableCell>
                       <Link
                         to={`/equipment/${item.equipment_id}`}
@@ -273,18 +301,18 @@ export default function Equipment() {
                     </TableCell>
                     <TableCell>{item.type}</TableCell>
                     <TableCell>{getStatusBadge(item.status)}</TableCell>
-                    <TableCell>{item.location || 'Не указано'}</TableCell>
+                    <TableCell>{item.location || "Не указано"}</TableCell>
                     <TableCell className="max-w-xs truncate">
-                      {item.specifications || 'Не указано'}
+                      {item.specifications || "Не указано"}
                     </TableCell>
                     <TableCell>
-                      {item.responsible_persons?.length > 0 
+                      {item.responsible_persons?.length > 0
                         ? item.responsible_persons[0].name
-                        : 'Не назначен'
-                      }
+                        : "Не назначен"}
                       {item.responsible_persons?.length > 1 && (
                         <span className="text-muted-foreground">
-                          {' '}и еще {item.responsible_persons.length - 1}
+                          {" "}
+                          и еще {item.responsible_persons.length - 1}
                         </span>
                       )}
                     </TableCell>
@@ -304,8 +332,13 @@ export default function Equipment() {
                 ))}
                 {equipmentData?.data?.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
-                      {searchTerm ? 'Оборудование не найдено' : 'Нет оборудования'}
+                    <TableCell
+                      colSpan={8}
+                      className="text-center py-8 text-muted-foreground"
+                    >
+                      {searchTerm
+                        ? "Оборудование не найдено"
+                        : "Нет оборудования"}
                     </TableCell>
                   </TableRow>
                 )}
@@ -317,7 +350,8 @@ export default function Equipment() {
           {equipmentData && equipmentData.last_page > 1 && (
             <div className="flex items-center justify-between mt-4">
               <div className="text-sm text-muted-foreground">
-                Показано {equipmentData.from}-{equipmentData.to} из {equipmentData.total} записей
+                Показано {equipmentData.from}-{equipmentData.to} из{" "}
+                {equipmentData.total} записей
               </div>
               <div className="flex items-center space-x-2">
                 <Button
