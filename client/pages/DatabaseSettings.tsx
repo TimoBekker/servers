@@ -240,7 +240,7 @@ export default function DatabaseSettings() {
       <div className="border-b border-border pb-6">
         <h1 className="text-3xl font-bold mb-2">Настройки базы данных</h1>
         <p className="text-muted-foreground">
-          Настройка подключения к PostgreSQL и Laravel API
+          Н��стройка подключения к PostgreSQL и Laravel API
         </p>
       </div>
 
@@ -556,9 +556,9 @@ export default function DatabaseSettings() {
               <div className="space-y-1 text-sm font-mono">
                 <p>GET /api/equipment</p>
                 <p>POST /api/equipment</p>
-                <p>GET /api/equipment/{id}</p>
-                <p>PUT /api/equipment/{id}</p>
-                <p>DELETE /api/equipment/{id}</p>
+                <p>GET /api/equipment/&#123;id&#125;</p>
+                <p>PUT /api/equipment/&#123;id&#125;</p>
+                <p>DELETE /api/equipment/&#123;id&#125;</p>
                 <p>GET /api/equipment-statistics</p>
               </div>
             </div>
@@ -568,9 +568,9 @@ export default function DatabaseSettings() {
               <div className="space-y-1 text-sm font-mono">
                 <p>GET /api/software</p>
                 <p>POST /api/software</p>
-                <p>GET /api/software/{id}</p>
-                <p>PUT /api/software/{id}</p>
-                <p>DELETE /api/software/{id}</p>
+                <p>GET /api/software/&#123;id&#125;</p>
+                <p>PUT /api/software/&#123;id&#125;</p>
+                <p>DELETE /api/software/&#123;id&#125;</p>
               </div>
             </div>
             
@@ -579,9 +579,9 @@ export default function DatabaseSettings() {
               <div className="space-y-1 text-sm font-mono">
                 <p>GET /api/information-systems</p>
                 <p>POST /api/information-systems</p>
-                <p>GET /api/information-systems/{id}</p>
-                <p>PUT /api/information-systems/{id}</p>
-                <p>DELETE /api/information-systems/{id}</p>
+                <p>GET /api/information-systems/&#123;id&#125;</p>
+                <p>PUT /api/information-systems/&#123;id&#125;</p>
+                <p>DELETE /api/information-systems/&#123;id&#125;</p>
               </div>
             </div>
             
