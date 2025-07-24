@@ -23,6 +23,7 @@ import ReportsResources from "./pages/ReportsResources";
 import ReportsLicenses from "./pages/ReportsLicenses";
 import NotFound from "./pages/NotFound";
 import DatabaseSettings from "./pages/DatabaseSettings";
+import TestPage from "./pages/TestPage";
 
 const queryClient = new QueryClient();
 
