@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
+import { handleHealth } from "./routes/health";
+import { handleEquipmentStatistics } from "./routes/equipment-statistics";
 
 export function createServer() {
   const app = express();
@@ -16,6 +18,8 @@ export function createServer() {
   });
 
   app.get("/api/demo", handleDemo);
+  app.get("/api/health", handleHealth);
+  app.get("/api/equipment-statistics", handleEquipmentStatistics);
 
   return app;
 }

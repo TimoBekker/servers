@@ -10,3 +10,21 @@
 export interface DemoResponse {
   message: string;
 }
+
+/**
+ * Health check response type
+ */
+export interface HealthResponse {
+  status: string;
+  timestamp: string;
+  service: string;
+}
+
+/**
+ * Equipment statistics response type
+ */
+export interface EquipmentStatistics {
+  total: number;
+  by_status: Record<string, number>;
+  by_type: Record<string, number>;
+}
