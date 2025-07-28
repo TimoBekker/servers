@@ -544,8 +544,8 @@ export default function DatabaseSettings() {
               <Alert>
                 <XCircle className="h-4 w-4" />
                 <AlertDescription>
-                  Убедитесь, что MariaDB запущена и доступна.
-                  Проверьте настройки подключения.
+                  Убедитесь, что Laravel API запущен и MariaDB доступна.
+                  Проверьте настройки подключения к базе данных.
                 </AlertDescription>
               </Alert>
             )}
@@ -603,7 +603,7 @@ export default function DatabaseSettings() {
         <CardHeader>
           <CardTitle>Доступные API endpoints</CardTitle>
           <CardDescription>
-            Список основных API маршрутов Express сервера с MariaDB
+            Список API маршрутов Express сервера для работы с MariaDB
           </CardDescription>
         </CardHeader>
         <CardContent>
