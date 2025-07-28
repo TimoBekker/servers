@@ -193,8 +193,8 @@ export default function DatabaseSettings() {
   const resetToDefaults = () => {
     setConfig({
       host: "localhost",
-      port: "8000", 
-      database: "your_mariadb_database",
+      port: "3306", 
+      database: "servers_db",
       username: "",
       password: "",
     });
