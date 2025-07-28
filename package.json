@@ -16,6 +16,8 @@
     "build:client": "vite build",
     "build:server": "vite build --config vite.config.server.ts",
     "start": "node dist/server/node-build.mjs",
+    "start:dev": "npm run dev",
+    "start:laravel": "cd backend && php artisan serve --host=0.0.0.0 --port=8000",
     "test": "vitest --run",
     "format.fix": "prettier --write .",
     "typecheck": "tsc"
