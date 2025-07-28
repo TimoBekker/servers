@@ -49,8 +49,8 @@ interface ConnectionStatus {
 export default function DatabaseSettings() {
   const [config, setConfig] = useState<DatabaseConfig>({
     host: "localhost",
-    port: "8000",
-    database: "your_mariadb_database",
+    port: "3306",
+    database: "servers_db",
     username: "",
     password: "",
   });
