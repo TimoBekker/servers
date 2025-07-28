@@ -89,18 +89,33 @@ export default function DatabaseSettings() {
     const startTime = Date.now();
 
     try {
+      // First, try to connect to the database
+      const connectResponse = await fetch('/api/database/connect', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          host: testConfig.host === 'localhost' ? '127.0.0.1' : testConfig.host,
+          port: testConfig.port === '8000' ? '3306' : testConfig.port,
+          database: testConfig.database,
+          user: testConfig.username,
+          password: testConfig.password
+        })
+      });
+
+      if (!connectResponse.ok) {
+        throw new Error('Failed to connect to database');
+      }
+
       // Проверяем health endpoint
-      const healthResponse = await fetch(
-        `http://${testConfig.host}:${testConfig.port}/api/health`,
-      );
+      const healthResponse = await fetch('/api/health');
 
       if (healthResponse.ok) {
         const healthData = await healthResponse.json();
 
         // Получаем статистику для проверки подключения к БД
-        const statsResponse = await fetch(
-          `http://${testConfig.host}:${testConfig.port}/api/equipment-statistics`,
-        );
+        const statsResponse = await fetch('/api/equipment-statistics');
 
         if (statsResponse.ok) {
           const statsData = await statsResponse.json();
@@ -110,12 +125,13 @@ export default function DatabaseSettings() {
             connected: true,
             message: "Подключение успешно",
             lastChecked: new Date().toLocaleString("ru-RU"),
-            version: healthData.service || "Laravel API",
+            version: healthData.service || "Express + MariaDB",
             tables: [
-              "equipment",
-              "software",
-              "information_systems",
-              "responsible_persons",
+              "r_equipment",
+              "r_software", 
+              "r_information_system",
+              "user",
+              "s_response_equipment"
             ],
             responseTime,
             activeConnections: Math.floor(Math.random() * 10) + 1, // Заглушка
@@ -212,10 +228,6 @@ export default function DatabaseSettings() {
       // Сохраняем в localStorage
       localStorage.setItem("database-config", JSON.stringify(config));
 
-      // Обновляем базовый URL в API клиенте
-      const apiBaseUrl = `http://${config.host}:${config.port}/api`;
-      localStorage.setItem("api-base-url", apiBaseUrl);
-
       toast({
         title: "Сохранено",
         description: "Настройки подключения сохранены",
@@ -298,7 +310,7 @@ export default function DatabaseSettings() {
                   id="host"
                   value={config.host}
                   onChange={(e) => handleInputChange("host", e.target.value)}
-                  placeholder="localhost"
+                  placeholder="127.0.0.1"
                 />
               </div>
               <div>
@@ -307,7 +319,7 @@ export default function DatabaseSettings() {
                   id="port"
                   value={config.port}
                   onChange={(e) => handleInputChange("port", e.target.value)}
-                  placeholder="8000"
+                  placeholder="3306"
                 />
               </div>
             </div>
@@ -318,22 +330,22 @@ export default function DatabaseSettings() {
                 id="database"
                 value={config.database}
                 onChange={(e) => handleInputChange("database", e.target.value)}
-                placeholder="your_mariadb_database"
+                placeholder="servers_db"
               />
             </div>
 
             <div>
-              <Label htmlFor="username">Пользователь (опционально)</Label>
+              <Label htmlFor="username">Пользователь</Label>
               <Input
                 id="username"
                 value={config.username}
                 onChange={(e) => handleInputChange("username", e.target.value)}
-                placeholder="your_username"
+                placeholder="root"
               />
             </div>
 
             <div>
-              <Label htmlFor="password">Пароль (опционально)</Label>
+              <Label htmlFor="password">Пароль</Label>
               <Input
                 id="password"
                 type="password"
@@ -591,7 +603,7 @@ export default function DatabaseSettings() {
         <CardHeader>
           <CardTitle>Доступные API endpoints</CardTitle>
           <CardDescription>
-            Список основных API маршрутов для работы с MariaDB
+            Список основных API маршрутов Express сервера с MariaDB
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -609,33 +621,13 @@ export default function DatabaseSettings() {
             </div>
 
             <div>
-              <h4 className="font-semibold mb-2">Программное обеспечение</h4>
+              <h4 className="font-semibold mb-2">База данных</h4>
               <div className="space-y-1 text-sm font-mono">
-                <p>GET /api/software</p>
-                <p>POST /api/software</p>
-                <p>GET /api/software/&#123;id&#125;</p>
-                <p>PUT /api/software/&#123;id&#125;</p>
-                <p>DELETE /api/software/&#123;id&#125;</p>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-2">Информационные системы</h4>
-              <div className="space-y-1 text-sm font-mono">
-                <p>GET /api/information-systems</p>
-                <p>POST /api/information-systems</p>
-                <p>GET /api/information-systems/&#123;id&#125;</p>
-                <p>PUT /api/information-systems/&#123;id&#125;</p>
-                <p>DELETE /api/information-systems/&#123;id&#125;</p>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="font-semibold mb-2">Системные</h4>
-              <div className="space-y-1 text-sm font-mono">
+                <p>POST /api/database/connect</p>
                 <p>GET /api/health</p>
               </div>
             </div>
+
           </div>
         </CardContent>
       </Card>
