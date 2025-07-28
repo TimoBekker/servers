@@ -1,7 +1,7 @@
 // Получаем базовый URL из localStorage или используем значение по умолчанию
 const getApiBaseUrl = () => {
   const savedUrl = localStorage.getItem('api-base-url');
-  return savedUrl || 'http://localhost:8000/api';
+  return savedUrl || 'http://localhost:8080/api';
 };
 
 // Types based on Laravel API responses

@@ -49,7 +49,7 @@ interface ConnectionStatus {
 export default function DatabaseSettings() {
   const [config, setConfig] = useState<DatabaseConfig>({
     host: "localhost",
-    port: "8000",
+    port: "8080",
     database: "servers_db",
     username: "",
     password: "",
