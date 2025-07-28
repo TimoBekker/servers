@@ -49,8 +49,8 @@ interface ConnectionStatus {
 export default function DatabaseSettings() {
   const [config, setConfig] = useState<DatabaseConfig>({
     host: "localhost",
-    port: "8080",
-    database: "servers_db",
+    port: "8000",
+    database: "your_mariadb_database",
     username: "",
     password: "",
   });
@@ -177,8 +177,8 @@ export default function DatabaseSettings() {
   const resetToDefaults = () => {
     setConfig({
       host: "localhost",
-      port: "8000",
-      database: "servers_db",
+      port: "8000", 
+      database: "your_mariadb_database",
       username: "",
       password: "",
     });
@@ -287,7 +287,7 @@ export default function DatabaseSettings() {
               <span>Параметры подключения</span>
             </CardTitle>
             <CardDescription>
-              Настройки для подключения к Laravel API и PostgreSQL
+              Настройки для подключения к Laravel API и MariaDB
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -318,7 +318,7 @@ export default function DatabaseSettings() {
                 id="database"
                 value={config.database}
                 onChange={(e) => handleInputChange("database", e.target.value)}
-                placeholder="servers_db"
+                placeholder="your_mariadb_database"
               />
             </div>
 
@@ -328,7 +328,7 @@ export default function DatabaseSettings() {
                 id="username"
                 value={config.username}
                 onChange={(e) => handleInputChange("username", e.target.value)}
-                placeholder="postgres"
+                placeholder="your_username"
               />
             </div>
 
@@ -532,8 +532,8 @@ export default function DatabaseSettings() {
               <Alert>
                 <XCircle className="h-4 w-4" />
                 <AlertDescription>
-                  Убедитесь, что Laravel API запущен на указанном хосте и порту.
-                  Проверьте настройки CORS в Laravel.
+                  Убедитесь, что Laravel API запущен и MariaDB доступна.
+                  Проверьте настройки подключения к базе данных.
                 </AlertDescription>
               </Alert>
             )}
@@ -591,7 +591,7 @@ export default function DatabaseSettings() {
         <CardHeader>
           <CardTitle>Доступные API endpoints</CardTitle>
           <CardDescription>
-            Список основных API маршрутов для работы с данными
+            Список основных API маршрутов для работы с MariaDB
           </CardDescription>
         </CardHeader>
         <CardContent>
