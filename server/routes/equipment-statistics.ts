@@ -16,10 +16,9 @@ export const handleEquipmentStatistics: RequestHandler = async (req, res) => {
 
     // Get statistics by status
     const [statusResult] = await connection.execute(`
-      SELECT s.name as status, COUNT(*) as count 
-      FROM r_equipment e
-      LEFT JOIN c_state_equipment s ON e.state = s.id
-      GROUP BY s.name
+      SELECT status, COUNT(*) as count 
+      FROM r_equipment
+      GROUP BY status
     `);
     
     const byStatus: Record<string, number> = {};
@@ -29,10 +28,9 @@ export const handleEquipmentStatistics: RequestHandler = async (req, res) => {
 
     // Get statistics by type
     const [typeResult] = await connection.execute(`
-      SELECT t.name as type, COUNT(*) as count 
-      FROM r_equipment e
-      LEFT JOIN c_type_equipment t ON e.type = t.id
-      GROUP BY t.name
+      SELECT type, COUNT(*) as count 
+      FROM r_equipment
+      GROUP BY type
     `);
     
     const byType: Record<string, number> = {};
@@ -57,5 +55,5 @@ export const handleEquipmentStatistics: RequestHandler = async (req, res) => {
       by_type: {}
     };
     res.status(200).json(response);
-    }
+  }
 };

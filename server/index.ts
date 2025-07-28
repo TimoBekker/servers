@@ -1,5 +1,7 @@
 import express from "express";
 import cors from "cors";
+import fs from "fs";
+import path from "path";
 import { connectToDatabase } from "./database";
 import { handleDemo } from "./routes/demo";
 import { handleHealth } from "./routes/health";
@@ -25,13 +27,31 @@ export function createServer() {
     try {
       const { host, port, database, user, password } = req.body;
       
-      await connectToDatabase({
+      const connection = await connectToDatabase({
         host: host || 'localhost',
         port: parseInt(port) || 3306,
         database: database || 'test',
         user: user || 'root',
         password: password || ''
       });
+      
+      // Create tables if they don't exist
+      try {
+        const sqlPath = path.join(process.cwd(), 'server', 'sql', 'create_tables.sql');
+        if (fs.existsSync(sqlPath)) {
+          const createTablesSQL = fs.readFileSync(sqlPath, 'utf8');
+          const statements = createTablesSQL.split(';').filter(stmt => stmt.trim());
+          
+          for (const statement of statements) {
+            if (statement.trim()) {
+              await connection.execute(statement);
+            }
+          }
+          console.log('✅ Database tables created/verified');
+        }
+      } catch (tableError) {
+        console.warn('⚠️ Could not create tables:', tableError);
+      }
       
       res.json({ success: true, message: 'Connected to database successfully' });
     } catch (error) {
