@@ -193,8 +193,8 @@ export default function DatabaseSettings() {
   const resetToDefaults = () => {
     setConfig({
       host: "localhost",
-      port: "3306", 
-      database: "servers_db",
+      port: "8000", 
+      database: "your_mariadb_database",
       username: "",
       password: "",
     });
@@ -544,8 +544,8 @@ export default function DatabaseSettings() {
               <Alert>
                 <XCircle className="h-4 w-4" />
                 <AlertDescription>
-                  Убедитесь, что Laravel API запущен и MariaDB доступна.
-                  Проверьте настройки подключения к базе данных.
+                  Убедитесь, что MariaDB запущена и доступна.
+                  Проверьте настройки подключения.
                 </AlertDescription>
               </Alert>
             )}
